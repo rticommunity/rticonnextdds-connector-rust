@@ -151,10 +151,10 @@ impl LibraryProvisioner {
             Ok(LibraryProvisioner::GitHub(GitHubSource::new(version)))
         } else {
             /*
-             * Error scenario: VERSION file cannot be read.
+             * Error scenario: VERSION file does not exist, cannot be read, or is empty after trimming.
              */
             Err(format!(
-                "Environment variables {} and {} unset. {} doesn't contain native libraries. {} file doesn't exist or is invalid.",
+                "Environment variables {} and {} unset. {} doesn't contain native libraries. The file '{}' does not exist or is invalid.",
                 VERSION_ENV, DIR_ENV, CARGO_ENV, VERSION_FILE
             ))
         }
