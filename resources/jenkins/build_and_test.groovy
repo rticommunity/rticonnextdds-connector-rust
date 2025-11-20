@@ -119,8 +119,11 @@ def getBuildAndTestStages(String rustVersion) {
                             }
                         }
 
-                        publishCoverage adapters: [
-                            coberturaAdapter('tarpaulin-report/cobertura.xml')
+                        recordCoverage tools: [
+                            [
+                                parser: 'COBERTURA',
+                                pattern: 'tarpaulin-report/cobertura.xml'
+                            ],
                         ]
 
                         publishHTML(target: [
