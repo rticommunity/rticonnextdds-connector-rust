@@ -100,17 +100,27 @@ impl LibraryProvisioner {
         const VERSION_ENV: &str = "RTI_CONNECTOR_VERSION";
         const DIR_ENV: &str = "RTI_CONNECTOR_DIR";
         const CARGO_ENV: &str = "CARGO_MANIFEST_DIR";
+        const VERSION_FILE: &str =
+            concat!(env!("CARGO_MANIFEST_DIR"), "/CONNECTOR_VERSION");
 
         println!("cargo:rerun-if-env-changed={}", VERSION_ENV);
         println!("cargo:rerun-if-env-changed={}", DIR_ENV);
 
         if let Ok(version) = env::var(VERSION_ENV) {
+            /*
+             * First choice:
+             * Use version specified in RTI_CONNECTOR_VERSION to fetch from GitHub releases.
+             */
             Ok(LibraryProvisioner::GitHub(GitHubSource::new(version)))
         } else if let Some(connector_lib_dir) = env::var(DIR_ENV)
             .ok()
             .map(PathBuf::from)
             .filter(|path| path.exists() && path.is_dir())
         {
+            /*
+             * Second choice:
+             * Use local directory specified in RTI_CONNECTOR_DIR.
+             */
             println!("cargo:rerun-if-changed={}", connector_lib_dir.display());
             Ok(LibraryProvisioner::Directory(DirectorySource::new(
                 connector_lib_dir,
@@ -120,14 +130,32 @@ impl LibraryProvisioner {
             .map(|path_str| PathBuf::from(path_str).join(LIB_DIR_NAME))
             .filter(|path| path.exists() && path.is_dir())
         {
+            /*
+             * Third choice:
+             * Use 'rticonnextdds-connector' directory in the Cargo manifest directory.
+             */
             println!("cargo:rerun-if-changed={}", manifest_lib_dir.display());
             Ok(LibraryProvisioner::Directory(DirectorySource::new(
                 manifest_lib_dir,
             )))
+        } else if let Some(version) = std::fs::read_to_string(VERSION_FILE)
+            .ok()
+            .map(|s| s.trim().to_string())
+            .filter(|s| !s.is_empty())
+        {
+            /*
+             * Fallback:
+             * Use version specified in VERSION file to fetch from GitHub releases.
+             */
+            println!("cargo:rerun-if-changed={}", VERSION_FILE);
+            Ok(LibraryProvisioner::GitHub(GitHubSource::new(version)))
         } else {
+            /*
+             * Error scenario: VERSION file cannot be read.
+             */
             Err(format!(
-                "Environment variables {} and {} unset.  {} doesn't contain native libraries.",
-                VERSION_ENV, DIR_ENV, CARGO_ENV
+                "Environment variables {} and {} unset. {} doesn't contain native libraries. {} file doesn't exist or is invalid.",
+                VERSION_ENV, DIR_ENV, CARGO_ENV, VERSION_FILE
             ))
         }
     }
@@ -162,18 +190,21 @@ impl GitHubSource {
     }
 
     fn fetch_release_asset_url(&self) -> Result<String> {
-        let release_tag = format!("v{}", self.version);
-        let release_url = format!("{}/releases/tags/{}", self.api_root_uri, &release_tag);
+        let release_url = if self.version == "latest" {
+            format!("{}/releases/latest", self.api_root_uri)
+        } else {
+            format!("{}/releases/tags/v{}", self.api_root_uri, self.version)
+        };
         let release_json = ureq::get(&release_url)
             .header("Accept", "application/vnd.github+json")
             .call()
             .map_err(|e| {
-                format!("Failed to fetch '{}' release info: {}", release_tag, e)
+                format!("Failed to fetch '{}' release info: {}", self.version, e)
             })?
             .into_body()
             .read_to_string()
             .map_err(|e| {
-                format!("Failed to read '{}' release info: {}", release_tag, e)
+                format!("Failed to read '{}' release info: {}", self.version, e)
             })?;
 
         #[derive(Debug, serde::Deserialize)]
