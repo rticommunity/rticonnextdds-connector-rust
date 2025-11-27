@@ -1,0 +1,13 @@
+> cargo run -q --example shapes -- --help
+RTI Connector for Rust example for Shape data
+
+Usage: shapes [OPTIONS] <COMMAND>
+
+Commands:
+  pub   Publish shape data to DDS
+  sub   Subscribe to shape data from DDS
+  help  Print this message or the help of the given subcommand(s)
+
+Options:
+      --typed  Enable typed mode for shapes
+  -h, --help   Print help

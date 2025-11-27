@@ -25,7 +25,7 @@ jobs:
         uses: dtolnay/rust-toolchain@stable
 
       - name: Build documentation
-        run: cargo doc --no-deps
+        run: cargo doc --no-deps --example shapes --lib
 
       - name: Add redirect
         run: echo '<meta http-equiv="refresh" content="0;url=rtiddsconnector/index.html">' > target/doc/index.html

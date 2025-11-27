@@ -10,8 +10,36 @@
 //! parameters such as the number of samples and timeouts.
 //!
 //! ```console
-#![doc = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/examples/shapes/help.txt"))]
+#![doc = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/examples/shapes/help_main.txt"))]
 //! ```
+//!
+//! ### Publisher Command
+//!
+//! Publishes samples of [ShapeType][ShapeType] data at specified intervals
+//!
+//! It can be invoked from the command line as follows:
+//! ```console
+#![doc = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/examples/shapes/help_pub.txt"))]
+//! ```
+//! Subscribes to samples of [`ShapeType`][ShapeType] data and prints
+//! them to the console
+//!
+//! ### Subscriber Command
+//!
+//! It can be invoked from the command line as follows:
+//! ```console
+#![doc = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/examples/shapes/help_sub.txt"))]
+//! ```
+//!
+//! ## XML Configuration
+//!
+//! The example uses an XML configuration file (`Shapes.xml`), whose contents is as follows:
+//! ```xml
+#![doc = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/examples/shapes/Shapes.xml"))]
+//! ```
+//!
+
+#![deny(missing_docs)]
 
 mod publisher;
 mod subscriber;
@@ -37,34 +65,29 @@ fn validate_samples(s: &str) -> std::result::Result<usize, String> {
     }
 }
 
+/// Indicates whether typed serialization is enabled or disabled
 #[derive(Debug, Clone, Copy)]
 pub enum TypedMode {
+    /// Use JSON serialization when enabled
     Enabled,
+    /// Use dynamic, by-field serialization when disabled
     Disabled,
 }
 
-/// Typed shape structure matching the DDS data model.
-/// Only available when the `typed`` feature is enabled.
-
+/// Structure matching the ShapeType DDS data model.
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct ShapeType {
-    pub x: i32,
-    pub y: i32,
-    pub shapesize: i32,
+    /// The color of the shape (used as the key field)
     pub color: String,
+    /// The X coordinate of the shape
+    pub x: f64,
+    /// The Y coordinate of the shape
+    pub y: f64,
+    /// The size of the shape
+    pub shapesize: f64,
 }
 
-impl ShapeType {
-    pub fn new(x: i32, y: i32, shapesize: i32, color: &str) -> Self {
-        Self {
-            x,
-            y,
-            shapesize,
-            color: color.to_string(),
-        }
-    }
-}
-
+/// Command-line arguments for the shapes example application
 #[derive(Parser)]
 #[command(name = "shapes")]
 #[command(about = "RTI Connector for Rust example for Shape data")]
@@ -88,6 +111,7 @@ impl Args {
     }
 }
 
+/// Specific command-line arguments for components of the shapes example
 #[derive(Subcommand)]
 enum Commands {
     /// Publish shape data to DDS

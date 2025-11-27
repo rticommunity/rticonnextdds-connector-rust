@@ -1,0 +1,14 @@
+> cargo run -q --example shapes -- pub --help
+Publish shape data to DDS
+
+Usage: shapes pub [OPTIONS]
+
+Options:
+  -s, --samples <SAMPLES>
+          Total number of samples to publish [default: 100]
+  -w, --wait-ms <WAIT_MS>
+          Sleep duration between samples in milliseconds (0 = no wait) [default: 200]
+  -d, --wait-for-subscriptions-ms <WAIT_FOR_SUBSCRIPTIONS_MS>
+          Wait for subscriptions timeout in milliseconds (0 = infinite) [default: 3000]
+  -h, --help
+          Print help
