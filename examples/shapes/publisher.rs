@@ -72,11 +72,14 @@ pub fn main(
             .clear_members()
             .map_err(|e| format!("Failed to clear members: {}", e))?;
 
+        // Compute the value of the fields based on the sample ID
+        let shape: super::ShapeType = compute_sample_for_id(sample_id);
+
+        // Set the value of the fields
         let mut instance = output.instance();
         match typed_mode {
             TypedMode::Enabled => {
                 // Use typed serialization when the feature is enabled
-                let shape = super::ShapeType::new(10, 20, 30, "BLUE");
                 instance
                     .serialize(&shape)
                     .expect("Failed to serialize typed shape");
@@ -84,16 +87,16 @@ pub fn main(
             TypedMode::Disabled => {
                 // Manual field setting when typed feature is disabled
                 instance
-                    .set_number("x", 10.0)
+                    .set_number("x", shape.x)
                     .expect("Failed to set x coordinate");
                 instance
-                    .set_number("y", 20.0)
+                    .set_number("y", shape.y)
                     .expect("Failed to set y coordinate");
                 instance
-                    .set_number("shapesize", 30.0)
+                    .set_number("shapesize", shape.shapesize)
                     .expect("Failed to set shapesize");
                 instance
-                    .set_string("color", "BLUE")
+                    .set_string("color", &shape.color)
                     .expect("Failed to set color");
             }
         }
@@ -110,4 +113,23 @@ pub fn main(
     tlog!("Completed {} samples, exiting...", samples);
     tlog!("Publisher completed successfully!");
     Ok(())
+}
+
+/// Computes the field values for a given sample ID
+fn compute_sample_for_id(sample_id: usize) -> super::ShapeType {
+    const COLOR: &str = "BLUE"; // Fixed color for simplicity
+    const CANVAS: (f64, f64) = (250.0, 270.0);
+    const CENTER: (f64, f64) = (CANVAS.0 / 2.0, CANVAS.1 / 2.0);
+    const INCREMENT: (f64, f64) = (CANVAS.0 / 5.0, CANVAS.1 / 5.0);
+
+    let x = CENTER.0 + f64::sin(sample_id as f64) * INCREMENT.0;
+    let y = CENTER.1 + f64::cos(sample_id as f64) * INCREMENT.1;
+    let shapesize = CANVAS.0 / 10.0 + f64::cos(sample_id as f64) * CANVAS.0 / 20.0;
+
+    super::ShapeType {
+        color: COLOR.to_string(),
+        x,
+        y,
+        shapesize,
+    }
 }

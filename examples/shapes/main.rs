@@ -116,7 +116,7 @@ impl Args {
 enum Commands {
     /// Publish shape data to DDS
     Pub {
-        #[arg(short = 's', long, default_value = "100", value_parser = validate_samples)]
+        #[arg(short = 's', long, default_value_t = usize::MAX, value_parser = validate_samples)]
         /// Total number of samples to publish
         samples: usize,
 
@@ -130,7 +130,7 @@ enum Commands {
     },
     /// Subscribe to shape data from DDS
     Sub {
-        #[arg(short = 's', long, default_value = "100", value_parser = validate_samples)]
+        #[arg(short = 's', long, default_value_t = usize::MAX, value_parser = validate_samples)]
         /// Total number of samples to read
         samples: usize,
 
