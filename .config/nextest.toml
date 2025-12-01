@@ -6,3 +6,4 @@ leak-timeout = { period = "500ms", result = "fail" }
 
 [profile.ci.junit]
 path = "./test-results.xml"
+store-success-output = true
