@@ -1,6 +1,15 @@
 # RTI Connector for Rust
 
-This crate provides Rust bindings for the RTI Connector API, which allows
+RTI® Connext® is a connectivity software framework for integrating data sources
+of all types. At its core is the world's leading ultra-high performance,
+distributed networking databus.
+
+_RTI Connector_ provides a quick and easy way to write applications that publish
+and subscribe to the RTI Connext DDS databus in Rust and other languages.
+
+## Documentation
+
+This crate provides Rust bindings for the _RTI Connector_ API, which allows
 easy integration of RTI Connext DDS functionality into Rust applications.
 
 * [RTI Website](https://www.rti.com/)
@@ -11,8 +20,8 @@ easy integration of RTI Connext DDS functionality into Rust applications.
 
 ## Quick Start
 
-This crate is intended to be managed through Cargo as a Git repository. That is,
-in order to add it to your project dependencies, you would do:
+This crate is intended to be managed through Cargo as a Git repository. To add
+it to your project dependencies, enter:
 
 ```console
 cargo add \
@@ -20,37 +29,37 @@ cargo add \
     --branch <branch-name>
 ```
 
-Where `<branch-name>` is the branch you want to use, e.g. `master` or a specific
-in-development branch. Omitting `--branch` will default to `master`.
+`<branch-name>` is the branch you want to use; for example, `master` or a
+specific in-development branch. Omitting `--branch` will default to `master`.
 
-Once available, you can start using the crate in your rust code. Check the
-quickstart located at [`snippets/quickstart.rs`](snippets/quickstart.rs) for a
-simple example of how to use the Connector API.
+Once the crate is available, you can start using it in your rust code. See the
+quickstart file located at [`snippets/quickstart.rs`](snippets/quickstart.rs)
+for a simple example of how to use the Connector API.
 
 ### Note on Native Libraries
 
-This crate requires the RTI Connector C libraries to be available both during
+This crate requires the _RTI Connector_ C libraries to be available both during
 build and at runtime.
 
 At build time, the scripts in `build.rs` will attempt to download the required
-libraries from the [RTI Connector releases in Github][rti-github-connector].
+libraries from the [_RTI Connector_ releases in Github][rti-github-connector].
 
 [rti-github-connector]: https://github.com/rticommunity/rticonnextdds-connector/releases "RTI Connector Github repository"
 
-You can tune this behavior by setting the environment variable
+To tune this behavior, set the environment variable
 `RTI_CONNECTOR_VERSION` to the desired version (e.g. `1.4.0`) before building
 your application with Cargo. For more information, see
 [the HTML documentation][api-reference].
 
-At runtime, you'll need to ensure that your system's linker can find the
+At runtime, ensure that your system's linker can find the
 required libraries. This usually involves placing the native libraries
-side-to-side with the executable or using your system's dynamic library path
-environment variable (e.g. `LD_LIBRARY_PATH` on Linux, `DYLD_LIBRARY_PATH` on
+next to the executable or using your system's dynamic library path
+environment variable (`LD_LIBRARY_PATH` on Linux, `DYLD_LIBRARY_PATH` on
 macOS, or `PATH` on Windows).
 
 ## Examples
 
-The crate includes a `shapes` example compatible with the RTI Shapes Demo.
+The crate includes a `shapes` example compatible with the *RTI Shapes Demo*.
 This example can be run as a publisher or as a subscriber. You can read more
 about it [in its README](examples/shapes/README.md).
 
@@ -73,5 +82,5 @@ arising out of the use or inability to use the software.
 
 ## Contributing
 
-Please, check the [CONTRIBUTING.md](CONTRIBUTING.md) file for contribution and
+See the [CONTRIBUTING.md](CONTRIBUTING.md) file for contribution and
 development guidelines.
