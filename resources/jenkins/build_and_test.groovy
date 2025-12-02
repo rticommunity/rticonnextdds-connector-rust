@@ -18,7 +18,7 @@ CI_CONFIG = [:]
  * @param rustVersion Version of Rust used to generate the build & test stage.
  * @return The generated Build & Test stages
  */
-def getBuildAndTestStages(String rustVersion) {
+def getBuildAndTestStages(String rustVersion, String agentLabel = 'docker') {
     def dockerImage = docker.build(
         UUID.randomUUID().toString().split('-')[-1],
         "--pull -f resources/docker/Dockerfile --build-arg RUST_VERSION=${rustVersion} ."
@@ -29,6 +29,11 @@ def getBuildAndTestStages(String rustVersion) {
     return {
         /* TODO: Review how multi-version affect artifacts (valgrind, etc) */
         stage("Rust ${rustVersion}") {
+            agent {
+                node {
+                    label agentLabel
+                }
+            }
             dir("${versionWorkspace}") {
                 stage("Setup workspace") {
                     echo "[INFO] Building from ${pwd()}..."
@@ -143,7 +148,7 @@ def getBuildAndTestStages(String rustVersion) {
 
 /*
  * Get the Node-JS version from the job name if it is defined there. Example of job name:
- * ci/connector-js/rticonnextdds-connector-js_node-20_latest.
+ * ci/connector-rs/rust-1.90
  *
  * @return The list of Rust versions defined in the Job Name. An empty list if it is not defined in the job name.
  */
@@ -203,6 +208,7 @@ pipeline {
             steps {
                 script {
                     def rustVersions = getRustVersionsFromJobName()
+                    def agentLabels = ['docker', 'docker-windows']
 
                     // If the rust versions was not predefined in the job name, read them from the config file.
                     if(!rustVersions) {
@@ -212,8 +218,10 @@ pipeline {
                     def buildAndTestStages = [:]
 
                     // Generate the Build & Test stages for every selected rust version.
-                    rustVersions.each { version ->
-                        buildAndTestStages["Rust ${version}"] = getBuildAndTestStages(version)
+                    agentLabels.each { label ->
+                        rustVersions.each { version ->
+                            buildAndTestStages["Rust ${version}, Label '${label}'"] = getBuildAndTestStages(version, label)
+                        }
                     }
 
                     parallel buildAndTestStages
