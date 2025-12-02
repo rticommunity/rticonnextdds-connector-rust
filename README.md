@@ -5,12 +5,12 @@ of all types. At its core is the world's leading ultra-high performance,
 distributed networking databus.
 
 _RTI Connector_ provides a quick and easy way to write applications that publish
-and subscribe to the RTI Connext DDS databus in Rust and other languages.
+and subscribe to the _RTI Connext_ DDS databus in Rust and other languages.
 
 ## Documentation
 
 This crate provides Rust bindings for the _RTI Connector_ API, which allows
-easy integration of RTI Connext DDS functionality into Rust applications.
+easy integration of _RTI Connext_ DDS functionality into Rust applications.
 
 * [RTI Website](https://www.rti.com/)
 * [RTI Community](https://community.rti.com/)
@@ -30,9 +30,9 @@ cargo add \
 ```
 
 `<branch-name>` is the branch you want to use; for example, `master` or a
-specific in-development branch. Omitting `--branch` will default to `master`.
+specific in-development branch. If `--branch` is not defined, `master` is used by default.
 
-Once the crate is available, you can start using it in your rust code. See the
+Once the crate is available, you can start using it in your Rust code. See the
 quickstart file located at [`snippets/quickstart.rs`](snippets/quickstart.rs)
 for a simple example of how to use the Connector API.
 
@@ -59,7 +59,7 @@ macOS, or `PATH` on Windows).
 
 ## Examples
 
-The crate includes a `shapes` example compatible with the *RTI Shapes Demo*.
+The crate includes a `shapes` example compatible with *RTI Shapes Demo*.
 This example can be run as a publisher or as a subscriber. You can read more
 about it [in its README](examples/shapes/README.md).
 

@@ -10,7 +10,7 @@ for faster and easier integration in any programming language with access to
 native C code.
 
 The [_RTI Connector_ Github project page][gh-connector] contains more information about
-`rtiddsconnector`'s C interface, and bindings to other languages (such as
+`rtiddsconnector`'s C interface and bindings to other languages (such as
 Javascript). Following are the most important characteristics of
 the _RTI Connector_ API:
 

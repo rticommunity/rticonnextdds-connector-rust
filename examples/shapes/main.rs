@@ -33,7 +33,7 @@
 //!
 //! ## XML Configuration
 //!
-//! The example uses an XML configuration file (`Shapes.xml`), whose contents is as follows:
+//! The example uses an XML configuration file (`Shapes.xml`) with the following content:
 //! ```xml
 #![doc = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/examples/shapes/Shapes.xml"))]
 //! ```
