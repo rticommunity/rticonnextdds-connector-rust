@@ -12,29 +12,29 @@
 
 CI_CONFIG = [:]
 
+def stageNameFormat(String rustVersion, String agentLabel) {
+    return "Rust ${rustVersion}, Label '${agentLabel}'"
+}
+
 /*
  * This function generates the stages to Build & Test connector using a specific Rust version.
  *
  * @param rustVersion Version of Rust used to generate the build & test stage.
  * @return The generated Build & Test stages
  */
-def getBuildAndTestStages(String rustVersion, String agentLabel = 'docker') {
+def getBuildAndTestStages(String rustVersion, String agentLabel) {
     def dockerImage = docker.build(
         UUID.randomUUID().toString().split('-')[-1],
         "--pull -f resources/docker/Dockerfile --build-arg RUST_VERSION=${rustVersion} ."
     )
-    def versionWorkspace = "${env.WORKSPACE}/${rustVersion}"
-    def versionCargoHomeEnv = "CARGO_HOME=${versionWorkspace}/.cargo"
+    def dockerWorkspace = "${env.WORKSPACE}/${agentLabel.replaceAll('\\s+', '_')}/${rustVersion}"
+    def versionCargoHomeEnv = "CARGO_HOME=${dockerWorkspace}/.cargo"
 
     return {
-        /* TODO: Review how multi-version affect artifacts (valgrind, etc) */
-        stage("Rust ${rustVersion}") {
-            agent {
-                node {
-                    label agentLabel
-                }
+        stage(stageNameFormat(rustVersion, agentLabel)) {
+            agent "${agentLabel}"
             }
-            dir("${versionWorkspace}") {
+            dir("${dockerWorkspace}") {
                 stage("Setup workspace") {
                     echo "[INFO] Building from ${pwd()}..."
                     checkout scm
@@ -218,9 +218,9 @@ pipeline {
                     def buildAndTestStages = [:]
 
                     // Generate the Build & Test stages for every selected rust version.
-                    agentLabels.each { label ->
-                        rustVersions.each { version ->
-                            buildAndTestStages["Rust ${version}, Label '${label}'"] = getBuildAndTestStages(version, label)
+                    rustVersions.each { version ->
+                        agentLabels.each { label ->
+                            buildAndTestStages[stageNameFormat(version, label)] = getBuildAndTestStages(version, label)
                         }
                     }
 
