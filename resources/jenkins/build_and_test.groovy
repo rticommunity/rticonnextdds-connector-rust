@@ -33,7 +33,7 @@ def getBuildAndTestStages(String rustVersion, String agentLabel) {
     return {
         stage(stageNameFormat(rustVersion, agentLabel)) {
             agent "${agentLabel}"
-            }
+
             dir("${dockerWorkspace}") {
                 stage("Setup workspace") {
                     echo "[INFO] Building from ${pwd()}..."
