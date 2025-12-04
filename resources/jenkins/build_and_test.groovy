@@ -12,29 +12,24 @@
 
 CI_CONFIG = [:]
 
-def stageNameFormat(String rustVersion, String agentLabel) {
-    return "Rust ${rustVersion}, Label '${agentLabel}'"
-}
-
 /*
  * This function generates the stages to Build & Test connector using a specific Rust version.
  *
  * @param rustVersion Version of Rust used to generate the build & test stage.
  * @return The generated Build & Test stages
  */
-def getBuildAndTestStages(String rustVersion, String agentLabel) {
+def getBuildAndTestStages(String rustVersion) {
     def dockerImage = docker.build(
         UUID.randomUUID().toString().split('-')[-1],
         "--pull -f resources/docker/Dockerfile --build-arg RUST_VERSION=${rustVersion} ."
     )
-    def dockerWorkspace = "${env.WORKSPACE}/${agentLabel.replaceAll('\\s+', '_')}/${rustVersion}"
-    def versionCargoHomeEnv = "CARGO_HOME=${dockerWorkspace}/.cargo"
+    def versionWorkspace = "${env.WORKSPACE}/${rustVersion}"
+    def versionCargoHomeEnv = "CARGO_HOME=${versionWorkspace}/.cargo"
 
     return {
-        stage(stageNameFormat(rustVersion, agentLabel)) {
-            agent "${agentLabel}"
-
-            dir("${dockerWorkspace}") {
+        /* TODO: Review how multi-version affect artifacts (valgrind, etc) */
+        stage("Rust ${rustVersion}") {
+            dir("${versionWorkspace}") {
                 stage("Setup workspace") {
                     echo "[INFO] Building from ${pwd()}..."
                     checkout scm
@@ -148,7 +143,7 @@ def getBuildAndTestStages(String rustVersion, String agentLabel) {
 
 /*
  * Get the Node-JS version from the job name if it is defined there. Example of job name:
- * ci/connector-rs/rust-1.90
+ * ci/connector-js/rticonnextdds-connector-js_node-20_latest.
  *
  * @return The list of Rust versions defined in the Job Name. An empty list if it is not defined in the job name.
  */
@@ -208,7 +203,6 @@ pipeline {
             steps {
                 script {
                     def rustVersions = getRustVersionsFromJobName()
-                    def agentLabels = ['docker', 'docker-windows']
 
                     // If the rust versions was not predefined in the job name, read them from the config file.
                     if(!rustVersions) {
@@ -219,9 +213,7 @@ pipeline {
 
                     // Generate the Build & Test stages for every selected rust version.
                     rustVersions.each { version ->
-                        agentLabels.each { label ->
-                            buildAndTestStages[stageNameFormat(version, label)] = getBuildAndTestStages(version, label)
-                        }
+                        buildAndTestStages["Rust ${version}"] = getBuildAndTestStages(version)
                     }
 
                     parallel buildAndTestStages
