@@ -5,7 +5,7 @@ Usage: shapes pub [OPTIONS]
 
 Options:
   -s, --samples <SAMPLES>
-          Total number of samples to publish [default: 100]
+          Total number of samples to publish [default: unlimited]
   -w, --wait-ms <WAIT_MS>
           Sleep duration between samples in milliseconds (0 = no wait) [default: 200]
   -d, --wait-for-subscriptions-ms <WAIT_FOR_SUBSCRIPTIONS_MS>

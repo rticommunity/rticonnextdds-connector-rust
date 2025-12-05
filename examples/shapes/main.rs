@@ -21,10 +21,11 @@
 //! ```console
 #![doc = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/examples/shapes/help_pub.txt"))]
 //! ```
-//! Subscribes to samples of [`ShapeType`][ShapeType] data and prints
-//! them to the console
 //!
 //! ### Subscriber Command
+//!
+//! Subscribes to samples of [`ShapeType`][ShapeType] data and prints
+//! them to the console
 //!
 //! It can be invoked from the command line as follows:
 //! ```console

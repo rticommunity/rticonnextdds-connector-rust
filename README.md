@@ -34,7 +34,7 @@ specific in-development branch. If `--branch` is not defined, `master` is used b
 
 Once the crate is available, you can start using it in your Rust code. See the
 quickstart file located at [`snippets/quickstart.rs`](snippets/quickstart.rs)
-for a simple example of how to use the Connector API.
+for a simple example of how to use the _RTI Connector_ API.
 
 ### Note on Native Libraries
 

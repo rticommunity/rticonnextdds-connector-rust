@@ -5,7 +5,7 @@ Usage: shapes sub [OPTIONS]
 
 Options:
   -s, --samples <SAMPLES>
-          Total number of samples to read [default: 100]
+          Total number of samples to read [default: unlimited]
   -w, --wait-ms <WAIT_MS>
           Wait timeout in milliseconds (0 = infinite) [default: 500]
   -d, --wait-for-publications-ms <WAIT_FOR_PUBLICATIONS_MS>
