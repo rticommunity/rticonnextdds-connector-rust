@@ -5,7 +5,7 @@ access DDS domains from Rust using [RTI Connext][rti-pro]'s C libraries and the
 simplified _RTI Connector_ API.
 
 The API offered by `rtiddsconnector` does **NOT** match the
-[standard DDS API][omg-dds]. Rather offers a simplified interface  developed
+[standard DDS API][omg-dds]. Rather, it offers a simplified interface  developed
 for faster and easier integration in any programming language with access to
 native C code.
 
