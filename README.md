@@ -9,7 +9,7 @@ and subscribe to the _RTI Connext_ DDS databus in Rust and other languages.
 
 ## Documentation
 
-This crate provides Rust bindings for the _RTI Connector_ API, which allows
+The `rtiddsconnector` crate provides Rust bindings for the _RTI Connector_ API, which allows
 easy integration of _RTI Connext_ DDS functionality into Rust applications.
 
 * [RTI Website](https://www.rti.com/)
@@ -21,7 +21,7 @@ easy integration of _RTI Connext_ DDS functionality into Rust applications.
 ## Quick Start
 
 This crate is intended to be managed through Cargo as a Git repository. To add
-it to your project dependencies, enter:
+`rtiddsconnector` to your project dependencies, enter:
 
 ```console
 cargo add \
@@ -39,7 +39,7 @@ for a simple example of how to use the _RTI Connector_ API.
 ### Note on Native Libraries
 
 This crate requires the _RTI Connector_ C libraries to be available both during
-build and at runtime.
+the build and at runtime.
 
 At build time, the scripts in `build.rs` will attempt to download the required
 libraries from the [_RTI Connector_ releases in Github][rti-github-connector].
@@ -63,7 +63,7 @@ The crate includes a `shapes` example compatible with *RTI Shapes Demo*.
 This example can be run as a publisher or as a subscriber. You can read more
 about it [in its README](examples/shapes/README.md).
 
-Additionally, it contains read-only snippets in the `snippets` module that
+Additionally, the example contains read-only snippets in the `snippets` module that
 demonstrate various features of the Connector API, and are used in the
 documentation.
 
