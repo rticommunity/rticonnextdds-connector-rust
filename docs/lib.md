@@ -16,7 +16,7 @@ the _RTI Connector_ API:
 
 * It is based on an external [XML configuration][omg-dds-xml] file that
   fully describes the DDS DomainParticipant and its contained entities
-  (Types, Topics, DataReaders, DataWriters, etc).
+  (_Types_, _Topics_, _DataReaders_, _DataWriters_, etc).
 * It is based on Dynamic Data, removing the need for code generation steps
   typically required by DDS applications.
 * It features implicit memory management for data samples, simplifying
