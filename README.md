@@ -12,7 +12,7 @@ and subscribe to the _RTI Connext_ DDS databus in Rust and other languages.
 The `rtiddsconnector` crate provides Rust bindings for the _RTI Connector_ API, which allows
 easy integration of _RTI Connext_ DDS functionality into Rust applications.
 
-You can find documentation for Connext , Connector, and all other RTI products
+You can find documentation for Connext, Connector, and all other RTI products
 on the following sites:
 
 * [RTI Website](https://www.rti.com/)
