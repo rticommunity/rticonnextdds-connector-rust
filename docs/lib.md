@@ -1,4 +1,4 @@
-# A simple DDS API for Rust
+# A simple DDS API for Rust (Experimental)
 
 The `rtiddsconnector` crate provides a lightweight interface with which to
 access DDS domains from Rust using [RTI Connext][rti-pro] C libraries and the

@@ -1,4 +1,4 @@
-# RTI Connector for Rust
+# RTI Connector for Rust (Experimental)
 
 RTI® Connext® is a connectivity software framework for integrating data sources
 of all types. At its core is the world's leading ultra-high performance,
@@ -17,7 +17,7 @@ on the following sites:
 
 * [RTI Website](https://www.rti.com/)
 * [RTI Community](https://community.rti.com/)
-* [_Connector_ for Rust API Reference][api-reference]
+* [_Connector for Rust_ API Reference][api-reference]
 
 [api-reference]: https://rticommunity.github.io/rticonnextdds-connector-rs/ "RTI Connector for Rust API Reference"
 
@@ -52,7 +52,7 @@ libraries from the [_RTI Connector_ releases in Github][rti-github-connector].
 To tune this behavior, set the environment variable
 `RTI_CONNECTOR_VERSION` to the desired version (e.g. `1.4.0`) before building
 your application with Cargo. For more information, see
-[the HTML documentation][api-reference].
+[the _Connector for Rust_ API reference][api-reference].
 
 At runtime, ensure that your system's linker can find the
 required libraries. This usually involves placing the native libraries
