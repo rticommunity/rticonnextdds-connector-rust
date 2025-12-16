@@ -15,7 +15,7 @@ Javascript). Following are the most important characteristics of
 the _RTI Connector_ API:
 
 * It is based on an external [XML configuration][omg-dds-xml] file that
-  fully describes the DDS DomainParticipant and its contained entities
+  fully describes the DDS _DomainParticipant_ and its contained entities
   (_Types_, _Topics_, _DataReaders_, _DataWriters_, etc).
 * It is based on Dynamic Data, removing the need for code generation steps
   typically required by DDS applications.
@@ -23,6 +23,12 @@ the _RTI Connector_ API:
   the application code.
 * It features implicit data conversions between DDS primitive types and
   native types supported by the target programming language.
+
+> **IMPORTANT:**
+> _Connector for Rust_ is an experimental product; do not use it in production
+> systems. This release is an evaluation distribution; use it to explore using
+> RTI Connext functionality into Rust applications. For support, you may
+> contact <support@rti.com>.
 
 [rti-pro]: https://www.rti.com/products/dds "RTI Connext Professional"
 [omg-dds]: https://www.omg.org/spec/DDS/ "OMG DDS Specification"
@@ -36,19 +42,19 @@ The `rtiddsconnector` crate exposes the _RTI Connector_ API through the followin
 * [`Connector`]: Represents a DDS _DomainParticipant_, and is used to create
   `Input` and `Output` objects for reading and writing data.
 * [`Input`]: Represents a DDS _DataReader_, and is used to read data samples
-  from DDS topics.
+  from DDS _Topics_.
 * [`Output`]: Represents a DDS _DataWriter_, and is used to write data samples
-  to DDS topics.
+  to DDS _Topics_.
 
 In addition to these main abstractions, the crate also exposes, among others, the following types:
 
 * [`Sample`]: A trait representing a data sample read from an `Input`.
 * [`SampleIterator`]: An iterator over valid samples read from an `Input`.
 * [`Instance`]: A struct representing a data sample to be written to an `Output`.
-* [`ConnectorError`]: A struct representing errors that can occur when using the Connector API.
+* [`ConnectorError`]: A struct representing errors that can occur when using the _Connector_ API.
 * [`ConnectorResult`]: A type alias for `Result<T, ConnectorError>`, used for error handling.
 * [`ConnectorFallible`]: A type alias for `Result<T, Box<dyn std::error::Error>>`, used for fallible operations.
-* [`GlobalsDropGuard`]: A struct that ensures proper cleanup of global resources used by the Connector API.
+* [`GlobalsDropGuard`]: A struct that ensures proper cleanup of global resources used by the _Connector_ API.
 
 ### Typed Data Support
 

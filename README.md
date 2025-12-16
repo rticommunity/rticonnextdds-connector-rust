@@ -7,13 +7,24 @@ distributed networking databus.
 _RTI Connector_ provides a quick and easy way to write applications that publish
 and subscribe to the _RTI Connext_ DDS databus in Rust and other languages.
 
+_RTI Connector for Rust_ is an experimental crate that provides Rust bindings
+for the _RTI Connector_ API. It does so by exposing a safe and idiomatic Rust
+interface over the underlying C API, in a crate called `rtiddsconnector`.
+
+> **IMPORTANT:**
+> _Connector for Rust_ is an experimental product; do not use it in production
+> systems. This release is an evaluation distribution; use it to explore using
+> _RTI Connext_ functionality into Rust applications. For support, you may
+> contact <support@rti.com>.
+
 ## Documentation
 
-The `rtiddsconnector` crate provides Rust bindings for the _RTI Connector_ API, which allows
-easy integration of _RTI Connext_ DDS functionality into Rust applications.
+The `rtiddsconnector` crate provides Rust bindings for the _RTI Connector_ API,
+which allows easy integration of _RTI Connext_ DDS functionality into Rust
+applications.
 
-You can find documentation for Connext, Connector, and all other RTI products
-on the following sites:
+You can find documentation for _RTI Connext_, _RTI Connector_, and all other
+RTI products on the following sites:
 
 * [RTI Website](https://www.rti.com/)
 * [RTI Community](https://community.rti.com/)
@@ -33,7 +44,8 @@ cargo add \
 ```
 
 `<branch-name>` is the branch you want to use; for example, `master` or a
-specific in-development branch. If `--branch` is not defined, `master` is used by default.
+specific in-development branch. If `--branch` is not defined, `master` is used
+by default.
 
 Once the crate is available, you can start using it in your Rust code. See the
 quickstart file located at [`snippets/quickstart.rs`](snippets/quickstart.rs)
@@ -66,11 +78,18 @@ The crate includes a `shapes` example compatible with *RTI Shapes Demo*.
 This example can be run as a publisher or as a subscriber. You can read more
 about it [in its README](examples/shapes/README.md).
 
-Additionally, the example contains read-only snippets in the `snippets` module that
-demonstrate various features of the Connector API, and are used in the
+Additionally, the example contains read-only snippets in the `snippets` module
+that demonstrate various features of the _Connector_ API, and are used in the
 documentation.
 
 ## License
+
+_RTI Connector_ for Rust is part of the RTI Connext Professional Package.
+If you have a valid license for the RTI Connext Professional Package,
+such license shall govern your use of _RTI Connector_ for Rust.
+All other use of this software shall be governed solely by the terms of
+RTI’s Software License for Non-Commercial Use \#4040, included at the
+[top level of the this repository](LICENSE.pdf).
 
 With the sole exception of the contents of the "examples" subdirectory, all use
 of this product is subject to the RTI Software License Agreement included at the
