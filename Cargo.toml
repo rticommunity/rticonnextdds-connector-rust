@@ -1,7 +1,7 @@
 [package]
 name = "rtiddsconnector"
 description = """RTI Connector for Rust"""
-repository = "https://github.com/rticommunity/rticonnextdds-connector-rs"
+repository = "https://github.com/rticommunity/rticonnextdds-connector-rust"
 version = "0.1.0"
 authors = [
     "Andrea Sorbini <asorbini@rti.com>",
