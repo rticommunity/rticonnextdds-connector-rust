@@ -12,15 +12,16 @@ use rtiddsconnector::{self, Connector, Input, Output};
 /// main logic of this example application.
 ///
 /// Finally, based on the [`rtiddsconnector::ConnectorError`] returned by
-/// [`start_using_connector`], it returns a [`Result<String, String>`] to
+/// [`start_using_connector`], it returns a [`Result<(), String>`] to
 /// simulate a mapping to your own Application Error type.
-fn main() -> std::result::Result<String, String> {
+fn main() -> std::result::Result<(), String> {
     let _globals = rtiddsconnector::GlobalsDropGuard;
 
     if let Err(e) = start_using_connector() {
         Err(format!("Application failed: {}", e))
     } else {
-        Ok("Application completed successfully.".to_string())
+        println!("Application completed successfully.");
+        Ok(())
     }
 }
 
