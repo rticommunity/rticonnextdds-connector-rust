@@ -27,10 +27,12 @@ the _RTI Connector_ API:
 > **IMPORTANT:**
 > _Connector for Rust_ is an experimental product; do not use it in production
 > systems. This release is an evaluation distribution; use it to explore using
-> RTI Connext functionality into Rust applications. For support, you may
-> contact <support@rti.com>.
+> _RTI Connext_ functionality into Rust applications. As an experimental RTI
+> product, we only offer support through the [RTI Community Forum][rti-community],
+> backed by RTI engineers who will answer your questions.
 
 [rti-pro]: https://www.rti.com/products/dds "RTI Connext Professional"
+[rti-community]: https://community.rti.com/ "RTI Community Forum"
 [omg-dds]: https://www.omg.org/spec/DDS/ "OMG DDS Specification"
 [omg-dds-xml]: https://www.omg.org/spec/DDS-XML/ "OMG DDS XML Specification"
 [gh-connector]: https://github.com/rticommunity/rticonnextdds-connector "RTI Connector on Github"

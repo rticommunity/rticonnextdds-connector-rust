@@ -14,8 +14,9 @@ interface over the underlying C API, in a crate called `rtiddsconnector`.
 > **IMPORTANT:**
 > _Connector for Rust_ is an experimental product; do not use it in production
 > systems. This release is an evaluation distribution; use it to explore using
-> _RTI Connext_ functionality into Rust applications. For support, you may
-> contact <support@rti.com>.
+> _RTI Connext_ functionality into Rust applications. As an experimental RTI
+> product, we only offer support through the [RTI Community Forum][rti-community],
+> backed by RTI engineers who will answer your questions.
 
 ## Documentation
 
@@ -27,9 +28,10 @@ You can find documentation for _RTI Connext_, _RTI Connector_, and all other
 RTI products on the following sites:
 
 * [RTI Website](https://www.rti.com/)
-* [RTI Community](https://community.rti.com/)
+* [RTI Community][rti-community]
 * [_Connector for Rust_ API Reference][api-reference]
 
+[rti-community]: https://community.rti.com/ "RTI Community Forum"
 [api-reference]: https://rticommunity.github.io/rticonnextdds-connector-rs/ "RTI Connector for Rust API Reference"
 
 ## Quick Start
