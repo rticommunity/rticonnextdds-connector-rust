@@ -64,7 +64,7 @@ libraries from the [_RTI Connector_ releases in Github][rti-github-connector].
 [rti-github-connector]: https://github.com/rticommunity/rticonnextdds-connector/releases "RTI Connector Github repository"
 
 To tune this behavior, set the environment variable
-`RTI_CONNECTOR_VERSION` to the desired version (e.g. `1.4.0`) before building
+`RTI_CONNECTOR_VERSION` to the desired version (e.g., `1.4.0`) before building
 your application with Cargo. For more information, see
 [the _Connector for Rust_ API reference][api-reference].
 
@@ -76,7 +76,7 @@ macOS, or `PATH` on Windows).
 
 ## Examples
 
-The crate includes a `shapes` example compatible with *RTI Shapes Demo*.
+The crate includes a `shapes` example compatible with *[RTI Shapes Demo](https://community.rti.com/static/documentation/connext-dds/current/doc/manuals/connext_dds_professional/tools/shapes_demo/shapes_demo/ShapesTitle.htm)*.
 This example can be run as a publisher or as a subscriber. You can read more
 about it [in its README](examples/shapes/README.md).
 
@@ -91,7 +91,7 @@ If you have a valid license for the RTI Connext Professional Package,
 such license shall govern your use of _RTI Connector_ for Rust.
 All other use of this software shall be governed solely by the terms of
 RTI’s Software License for Non-Commercial Use \#4040, included at the
-[top level of the this repository](LICENSE.pdf).
+[top level of this repository](LICENSE.pdf).
 
 With the sole exception of the contents of the "examples" subdirectory, all use
 of this product is subject to the RTI Software License Agreement included at the
