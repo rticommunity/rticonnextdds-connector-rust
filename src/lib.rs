@@ -24,6 +24,7 @@ pub use result::{ConnectorError, ConnectorFallible, ConnectorResult};
 
 mod connector;
 mod ffi;
+pub mod guide;
 mod input;
 mod output;
 mod result;
