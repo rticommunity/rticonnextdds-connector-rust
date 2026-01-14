@@ -39,9 +39,8 @@ the _RTI Connector_ API:
 
 ## User Guide
 
-Start here for a walkthrough-first tour of the crate:
+Start here for a tour of the crate:
 
-* [API Overview](#api-overview)
 * [Getting started](crate::guide::getting_started)
 * [Configuration](crate::guide::configuration)
 * [Connector lifecycle](crate::guide::connector)
@@ -52,25 +51,3 @@ Start here for a walkthrough-first tour of the crate:
 * [Threading and ownership](crate::guide::threading)
 * [Advanced operations](crate::guide::advanced)
 
-## API Overview
-
-The `rtiddsconnector` crate exposes the _RTI Connector_ API through the following main abstractions:
-
-* [`Connector`]: Represents a DDS _DomainParticipant_, and is used to create
-  `Input` and `Output` objects for reading and writing data.
-* [`Input`]: Represents a DDS _DataReader_, and is used to read data samples
-  from DDS _Topics_.
-* [`Output`]: Represents a DDS _DataWriter_, and is used to write data samples
-  to DDS _Topics_.
-
-In addition to these main abstractions, the crate also exposes, among others, the following types:
-
-* [`Sample`]: A struct representing a data sample read from an `Input`.
-* [`SampleIterator`]: An iterator over samples read from an `Input`.
-* [`ValidSampleIterator`]: An iterator that filters only valid samples.
-* [`Instance`]: A struct representing a data sample to be written to an `Output`.
-* [`SelectedValue`]: A variant type used to set or read fields without JSON.
-* [`ConnectorError`]: A struct representing errors that can occur when using the _Connector_ API.
-* [`ConnectorResult`]: A type alias for `Result<T, ConnectorError>`, used for error handling.
-* [`ConnectorFallible`]: A type alias for `Result<(), ConnectorError>`, used for fallible operations.
-* [`GlobalsDropGuard`]: A struct that ensures proper cleanup of global resources used by the _Connector_ API.

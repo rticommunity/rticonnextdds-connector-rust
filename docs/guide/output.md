@@ -42,6 +42,9 @@ fn set_json(output: &mut Output) -> rtiddsconnector::ConnectorFallible {
 }
 ```
 
+For strongly-typed models, see [Data access and Serde](crate::guide::data) and
+[`crate::Instance::serialize`].
+
 Field names correspond to the type assigned to the output in XML. For example:
 
 ```xml

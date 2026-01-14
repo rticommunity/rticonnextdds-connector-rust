@@ -6,7 +6,7 @@ It owns native resources and creates `Input` and `Output` handles.
 ## Importing the crate
 
 ```rust
-use rtiddsconnector::Connector;
+use rtiddsconnector::{self, Connector};
 ```
 
 ## Creating a connector
