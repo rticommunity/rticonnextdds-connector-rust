@@ -1,20 +1,12 @@
-# Result types for error handling
+# Result types for Error Handling
 
-The `rtiddsconnector` API uses a small set of result types:
+The [`ConnectorError`] enum represents possible errors that can occur
+when using the Connector API.
 
-* [`ConnectorResult<T>`]: the standard result type for fallible operations.
-* [`ConnectorFallible`]: a convenience alias for `Result<(), ConnectorError>`.
-* [`ConnectorError`]: the error type used throughout the crate.
+The [`ConnectorResult`] type alias is used throughout the crate
+to represent operations that can succeed or fail with a
+[`ConnectorError`].
 
-## Inspecting errors
-
-`ConnectorError` exposes helper methods to classify errors:
-
-* [`ConnectorError::is_timeout`]
-* [`ConnectorError::is_entity_not_found`]
-* [`ConnectorError::is_field_not_found`]
-* [`ConnectorError::is_native_error`]
-* [`ConnectorError::last_error_message`]
-
-These helpers allow you to handle common cases without depending on internal
-error kinds.
+The [`ConnectorFallible`] type alias is used for operations
+that can can fail with [`ConnectorError`] but that doesn't have a
+meaningful return value (it is `()`).
