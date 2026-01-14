@@ -7,7 +7,7 @@ accessors for common primitive fields.
 
 The types you read and write can include nested structs, sequences, arrays, and
 unions. These types are defined in XML following RTI's XML-Based Application
-Creation format. See
+Creation format. For details, see
 [RTI XML-Based Application Creation](https://community.rti.com/static/documentation/connext-dds/current/doc/manuals/connext_dds_professional/xml_application_creation/xml_based_app_creation_guide/UnderstandingXMLBased/XMLTagsConfigEntities.htm).
 
 ## JSON vs member access
@@ -46,9 +46,8 @@ fn get_basic(sample: &Sample) -> rtiddsconnector::ConnectorFallible {
 ## Accessing complex members
 
 Examples of field-name syntax for nested members, arrays, sequences, and unions
-are available in the Connector JavaScript API documentation:
-
-[Accessing the data (field-name syntax examples)](https://community.rti.com/static/documentation/connector/current/api/javascript/data.html#.)
+are available in the [Accessing the data (field-name syntax examples)](https://community.rti.com/static/documentation/connector/current/api/javascript/data.html#)
+chapter of the Connector for JavaScript API documentation.
 
 ## Type-independent access with SelectedValue
 
@@ -93,5 +92,5 @@ If you want to work with Rust structs, use Serde:
   instance.
 * [`crate::Sample::deserialize`]: deserialize a sample into a struct.
 
-These methods allow you to keep strongly typed models in your application while
+These methods allow you to keep strongly-typed models in your application while
 still using the dynamic RTI Connector API.

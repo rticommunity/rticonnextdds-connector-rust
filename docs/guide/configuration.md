@@ -4,9 +4,8 @@ RTI Connector for Rust uses an XML configuration file to define participants,
 readers, writers, topics, types, and QoS. The XML schema is the same one used
 by RTI Connext DDS XML-Based Application Creation.
 
-For background on the XML format, see:
-
-* <https://community.rti.com/static/documentation/connext-dds/7.3.0/doc/manuals/connext_dds_professional/xml_application_creation/index.htm>
+For background on the XML format, see the
+[RTI XML-Based Application Creation guide](https://community.rti.com/static/documentation/connext-dds/current/doc/manuals/connext_dds_professional/xml_application_creation/index.htm).
 
 ## Loading a configuration
 
@@ -23,7 +22,7 @@ fn load_config() -> rtiddsconnector::ConnectorFallible {
 
 The `config_name` must match a `<domain_participant>` element in the XML.
 
-## XML tags and Connector API
+## XML tags and Connector API mapping
 
 The table below summarizes the most common XML tags and how they map to the
 Connector API:
@@ -73,7 +72,8 @@ Domains register types and define topics:
 
 ## Participants, readers, and writers
 
-Participants contain publishers and subscribers, which contain writers/readers:
+Participants contain publishers and subscribers, which in turn manage individual
+writers and readers:
 
 ```xml
 <domain_participant_library name="MyParticipantLibrary">
@@ -114,7 +114,7 @@ QoS can be configured at the profile level or per-entity. Example profile:
 
 ## Examples in this repo
 
-The repository includes XML examples you can adapt:
+This repository includes XML examples you can adapt:
 
 * `examples/MyApplication.xml`
 * `examples/shapes/Shapes.xml`

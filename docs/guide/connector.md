@@ -1,9 +1,14 @@
 # Connector lifecycle
 
+This chapter covers creating a connector, acquiring inputs and outputs, and
+cleaning up native resources.
+
 [`crate::Connector`] represents a DDS `DomainParticipant` configured from XML.
 It owns native resources and creates `Input` and `Output` handles.
 
 ## Importing the crate
+
+To import the crate:
 
 ```rust
 use rtiddsconnector::{self, Connector};
@@ -24,7 +29,7 @@ fn create_connector() -> rtiddsconnector::ConnectorFallible {
 ```
 
 The XML file defines your types, QoS profiles, and DDS entities. The call above
-loads a `<domain_participant>` from a `<domain_participant_library>`, for example:
+loads a `<domain_participant>` from a `<domain_participant_library>`. For example:
 
 ```xml
 <domain_participant_library name="MyParticipantLibrary">
@@ -42,8 +47,8 @@ There is no explicit `close()` method in Rust. Instead, `Connector`, `Input`, an
 `Output` are released when they go out of scope. The crate uses RAII to free
 native resources.
 
-If you want to force cleanup of Connext global resources at the end of a scope
-(for example in tests), use [`crate::GlobalsDropGuard`].
+To force cleanup of Connext global resources at the end of a scope
+(for example, in tests), use [`crate::GlobalsDropGuard`].
 
 ## Getting inputs and outputs
 
@@ -56,16 +61,14 @@ until the entity becomes available, use [`crate::Connector::take_input`] or
 See [Publishing data](crate::guide::output) and [Reading data](crate::guide::input)
 for the workflow that follows.
 
-## Threading note
+> **Note:** Multiple operations on the same `Connector`, or its contained
+> entities, are not protected for multi-threaded access. See
+> [Threading and ownership](crate::guide::threading) for guidance.
 
-Operations on the same `Connector` or its contained entities are not protected
-for multi-threaded access. See [Threading and ownership](crate::guide::threading)
-for guidance.
-
-## Auto-enable considerations
+## DataReader auto-enable considerations
 
 Connext DDS controls entity enablement through XML QoS settings (for example,
 `<entity_factory>/<autoenable_created_entities>`). If readers are enabled before
 you acquire an `Input`, data may already be available when you call
-`get_input`. This behavior comes from Connext configuration rather than the
+`get_input`. This behavior stems from your Connext configuration rather than the
 Rust API itself.

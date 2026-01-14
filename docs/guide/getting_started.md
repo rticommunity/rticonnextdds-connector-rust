@@ -1,7 +1,8 @@
 # Getting started
 
 This crate is intended to be consumed from Cargo as a Git dependency. The
-examples in `snippets/` and `examples/` are also included in the repository.
+examples in `snippets/` and `examples/` are also included in the
+[rticonnextdds-connector-rust repository](https://github.com/rticommunity/rticonnextdds-connector-rust).
 
 ## Add the dependency
 
@@ -9,7 +10,8 @@ examples in `snippets/` and `examples/` are also included in the repository.
 cargo add --git https://github.com/rticommunity/rticonnextdds-connector-rs
 ```
 
-If you need a specific branch, add `--branch <branch-name>`.
+This command adds the Connector for Rust repository to your project. If you
+need a specific branch, add `--branch <branch-name>`.
 
 ## Running the examples
 
@@ -22,8 +24,9 @@ See `examples/shapes/README.md` for usage details.
 
 ## Minimal example
 
-This is the typical flow: create a connector, obtain an output and input, write
-one sample, then read samples back.
+This is the typical flow for using Connector: create a connector,
+obtain an output and input, write one sample, then read samples back. For
+example:
 
 ```rust
 use rtiddsconnector::{Connector, GlobalsDropGuard, Input, Output};
@@ -56,14 +59,14 @@ fn main() -> rtiddsconnector::ConnectorFallible {
 
 At build time, `build.rs` locates the RTI Connector C libraries in this order:
 
-1. `RTI_CONNECTOR_VERSION`: downloads the target-specific libraries from the
+1. `RTI_CONNECTOR_VERSION` downloads the target-specific libraries from the
    RTI Connector GitHub releases.
-2. `RTI_CONNECTOR_DIR`: uses a local directory containing the libraries.
-3. `CARGO_MANIFEST_DIR/rticonnextdds-connector`: uses a local directory next to
+2. `RTI_CONNECTOR_DIR` uses a local directory containing the libraries.
+3. `CARGO_MANIFEST_DIR/rticonnextdds-connector` uses a local directory next to
    the crate.
-4. `CONNECTOR_VERSION` file: falls back to a version file in the crate root.
+4. `CONNECTOR_VERSION` file falls back to a version file in the crate root.
 
-If neither of these methods is successful, the build will fail with an error
+If none of the methods above is successful, the build will fail with an error
 message indicating that the C libraries could not be found.
 
 Once your application has been built, `cargo` commands will automatically pick

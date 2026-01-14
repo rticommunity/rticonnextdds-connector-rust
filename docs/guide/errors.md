@@ -27,6 +27,8 @@ To inspect the last native error message, call
 
 ## Timeout example
 
+This example waits for data and treats a timeout as a non-fatal outcome.
+
 ```rust
 use rtiddsconnector::Input;
 
@@ -45,6 +47,6 @@ fn wait_with_timeout(input: &Input) -> rtiddsconnector::ConnectorFallible {
 ## Native error details
 
 If an operation fails because of a native RTI Connector error, the
-`ConnectorError` will include the last error message from the native library.
+[`crate::ConnectorError`] will include the last error message from the native library.
 This can provide additional context when debugging configuration or data access
 issues.

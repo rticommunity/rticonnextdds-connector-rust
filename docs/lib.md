@@ -37,7 +37,7 @@ the _RTI Connector_ API:
 [omg-dds-xml]: https://www.omg.org/spec/DDS-XML/ "OMG DDS XML Specification"
 [gh-connector]: https://github.com/rticommunity/rticonnextdds-connector "RTI Connector on Github"
 
-## User Guide
+# User Guide
 
 Start here for a tour of the crate:
 
