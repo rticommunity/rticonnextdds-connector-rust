@@ -24,6 +24,10 @@ pub use result::{ConnectorError, ConnectorFallible, ConnectorResult};
 
 mod connector;
 mod ffi;
+mod input;
+mod output;
+mod result;
+
 #[cfg(doc)]
 pub mod guide {
     #![doc = include_str!(concat!(
@@ -96,6 +100,4 @@ pub mod guide {
         ))]
     }
 }
-mod input;
-mod output;
-mod result;
+
