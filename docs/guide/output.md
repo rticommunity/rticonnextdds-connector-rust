@@ -1,9 +1,11 @@
-# Publishing data
+# Publishing data (Output)
 
-[`crate::Output`] wraps a DDS `DataWriter` and exposes a single mutable
+[`crate::Output`] wraps a DDS DataWriter and exposes a single mutable
 [`crate::Instance`] representing the next sample to write.
 
 ## Getting the output
+
+To write a data sample, first look up an output:
 
 ```rust
 use rtiddsconnector::{Connector, Output};
@@ -15,7 +17,7 @@ fn get_output(connector: &Connector) -> rtiddsconnector::ConnectorResult<Output<
 
 ## Populating the data sample
 
-You can set fields member-by-member:
+The next step is to set the `Instance` fields. You can set them member-by-member:
 
 ```rust
 use rtiddsconnector::Output;
@@ -30,7 +32,7 @@ fn set_fields(output: &mut Output) -> rtiddsconnector::ConnectorFallible {
 }
 ```
 
-Or set the entire sample from JSON:
+Or using JSON:
 
 ```rust
 use rtiddsconnector::Output;
@@ -58,7 +60,8 @@ Field names correspond to the type assigned to the output in XML. For example:
 
 ## Writing the data sample
 
-To write the values set in the instance, call [`crate::Output::write`]:
+To write the values that have been set in the instance, call
+[`crate::Output::write`]:
 
 ```rust
 use rtiddsconnector::Output;
@@ -68,7 +71,7 @@ fn write_once(output: &mut Output) -> rtiddsconnector::ConnectorFallible {
 }
 ```
 
-If the DataWriter QoS is reliable, use [`crate::Output::wait`] or
+If the DataWriter QoS is reliable, you can use [`crate::Output::wait`] or
 [`crate::Output::wait_with_timeout`] to wait for acknowledgments:
 
 ```rust
@@ -80,8 +83,8 @@ fn write_and_wait(output: &mut Output) -> rtiddsconnector::ConnectorFallible {
 }
 ```
 
-To write with parameters such as a source timestamp, use
-[`crate::WriteParams`] and [`crate::Output::write_with_params`]:
+To write with parameters such as a source timestamp, use [`crate::WriteParams`]
+with [`crate::Output::write_with_params`]:
 
 ```rust
 use rtiddsconnector::{Output, WriteParams};
@@ -92,7 +95,7 @@ fn write_with_timestamp(output: &mut Output, ts: i64) -> rtiddsconnector::Connec
 }
 ```
 
-You can also dispose or unregister an instance:
+It is also possible to dispose or unregister an instance:
 
 ```rust
 use rtiddsconnector::{Output, WriteParams};
@@ -103,14 +106,14 @@ fn dispose_instance(output: &mut Output) -> rtiddsconnector::ConnectorFallible {
 }
 ```
 
-In these cases, only the key fields are relevant.
+In these two cases, only the key fields are relevant.
 
 ## Matching with a subscription
 
 Use [`crate::Output::wait_for_subscriptions`] or
-[`crate::Output::wait_for_subscriptions_with_timeout`] to detect matched or
-unmatched subscriptions. These methods return the change in the number of
-matches since the last call.
+[`crate::Output::wait_for_subscriptions_with_timeout`] to detect when a
+compatible subscription is matched or unmatched. These methods return the
+change in the number of matches since the last call.
 
 You can inspect the current list of matched subscriptions as JSON with
 [`crate::Output::display_matched_subscriptions`].

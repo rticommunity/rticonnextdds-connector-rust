@@ -6,12 +6,14 @@ ownership of `Input` and `Output` handles.
 
 ## Ownership rules
 
+Use the following ownership rules:
+
 * `Connector::get_input` and `Connector::get_output` return exclusive handles.
 * If an entity is already owned by another thread, you will receive an error.
 * Use `Connector::take_input` and `Connector::take_output` to block until the
   entity is free.
 
-## Practical guidance
+## Practical guidance about threading
 
 Keep each `Input` or `Output` on a single thread at a time. If you need to share
 work, consider a worker thread that owns the handle and communicates via

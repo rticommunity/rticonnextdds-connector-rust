@@ -114,7 +114,8 @@ QoS can be configured at the profile level or per-entity. Example profile:
 
 ## Examples in this repo
 
-This repository includes XML examples you can adapt:
+This repository includes XML examples you can adapt. For an example
+configuration file, see `examples/shapes/Shapes.xml`:
 
 * `examples/MyApplication.xml`
 * `examples/shapes/Shapes.xml`

@@ -16,8 +16,8 @@ use rtiddsconnector::{self, Connector};
 
 ## Creating a connector
 
-Create a connector with [`crate::Connector::new`], passing the namespaced
-participant name and the XML file path:
+To create a connector, pass an XML file and a configuration name to
+[`crate::Connector::new`]:
 
 ```rust
 use rtiddsconnector::Connector;
@@ -41,34 +41,30 @@ loads a `<domain_participant>` from a `<domain_participant_library>`. For exampl
 
 See a complete example in `examples/MyApplication.xml`.
 
+> **Note:** Operations on the same `Connector` or its contained entities are not
+> protected for multi-threaded access. See
+> [Threading and ownership](crate::guide::threading) for guidance.
+
 ## Closing a connector
 
 There is no explicit `close()` method in Rust. Instead, `Connector`, `Input`, and
 `Output` are released when they go out of scope. The crate uses RAII to free
 native resources.
 
-To force cleanup of Connext global resources at the end of a scope
-(for example, in tests), use [`crate::GlobalsDropGuard`].
+To force cleanup of Connext global resources at the end of a scope (for example,
+in tests), use [`crate::GlobalsDropGuard`].
 
 ## Getting inputs and outputs
 
-[`crate::Connector::get_input`] and [`crate::Connector::get_output`] return
-owned handles to the named reader/writer. The crate enforces single-threaded
-ownership: if an entity is already in use, these calls return an error. To wait
-until the entity becomes available, use [`crate::Connector::take_input`] or
-[`crate::Connector::take_output`].
+Once you have created a connector, use [`crate::Connector::get_input`] and
+[`crate::Connector::get_output`] to retrieve inputs and outputs.
+
+> **Note:** If the `<domain_participant>` you load contains both `<data_writer>`
+> and `<data_reader>` tags for the same topic and they have matching QoS, inputs
+> may receive data before you call `get_input`. To avoid this, configure the
+> `<subscriber>` that contains the `<data_reader>` with
+> `<subscriber_qos>/<entity_factory>/<autoenable_created_entities>` set to
+> `false`. Then inputs will only receive data after you call `get_input`.
 
 See [Publishing data](crate::guide::output) and [Reading data](crate::guide::input)
 for the workflow that follows.
-
-> **Note:** Multiple operations on the same `Connector`, or its contained
-> entities, are not protected for multi-threaded access. See
-> [Threading and ownership](crate::guide::threading) for guidance.
-
-## DataReader auto-enable considerations
-
-Connext DDS controls entity enablement through XML QoS settings (for example,
-`<entity_factory>/<autoenable_created_entities>`). If readers are enabled before
-you acquire an `Input`, data may already be available when you call
-`get_input`. This behavior stems from your Connext configuration rather than the
-Rust API itself.

@@ -1,9 +1,11 @@
-# Reading data
+# Reading data (Input)
 
 [`crate::Input`] wraps a DDS `DataReader` and provides an iterator-based
 interface over samples returned by the RTI Connector API.
 
 ## Getting the input
+
+To read or take samples, first get a reference to the input:
 
 ```rust
 use rtiddsconnector::{Connector, Input};
@@ -15,41 +17,48 @@ fn get_input(connector: &Connector) -> rtiddsconnector::ConnectorResult<Input<'_
 
 ## Reading or taking the data
 
-* [`crate::Input::read`]: copies samples into the local cache without removing
-  them from the reader.
-* [`crate::Input::take`]: removes samples from the reader and places them into
-  the local cache.
-
-After calling either, iterate over the cache:
+Call [`crate::Input::take`] to access and remove samples:
 
 ```rust
-use rtiddsconnector::Input;
-
-fn process(input: &mut Input) -> rtiddsconnector::ConnectorFallible {
-    input.take()?;
-
-    for sample in input.into_iter().valid_only() {
-        println!("Sample: {}", sample);
-    }
-
-    Ok(())
-}
+input.take()?;
 ```
 
-`valid_only()` skips samples with invalid data.
+Or call [`crate::Input::read`] to access samples but leave them available for a
+future `read` or `take`:
 
-## Waiting for data
+```rust
+input.read()?;
+```
 
 Use [`crate::Input::wait`] or [`crate::Input::wait_with_timeout`] to block until
-data is available. These methods do not read data; call `read` or `take`
-afterward.
+new data is available on a specific input. These methods do not read data; call
+`read` or `take` afterward.
 
 If you want to wait for data on any input owned by a connector, use
 [`crate::Connector::wait_for_data`] or
 [`crate::Connector::wait_for_data_with_timeout`]. These methods do not read
 samples; call `read` or `take` afterward.
 
-## Accessing data samples
+## Accessing the data samples
+
+After calling [`crate::Input::read`] or [`crate::Input::take`], iterate over the
+samples:
+
+```rust
+for sample in input.into_iter() {
+    if sample.is_valid()? {
+        println!("{}", sample);
+    }
+}
+```
+
+To skip invalid samples, use `valid_only()`:
+
+```rust
+for sample in input.into_iter().valid_only() {
+    println!("{}", sample);
+}
+```
 
 `Sample` provides typed accessors and JSON access:
 
@@ -61,7 +70,7 @@ samples; call `read` or `take` afterward.
 `Sample` implements `Display` to print the full JSON representation of the
 sample.
 
-If you need to access meta-data fields (SampleInfo), see the next section.
+If you need to access meta-data fields (SampleInfo), see [Accessing sample meta-data](#accessing-sample-meta-data).
 
 ## Returning the loan
 
@@ -71,19 +80,36 @@ resources sooner.
 
 ## Accessing sample meta-data
 
-Every sample includes associated meta-data (SampleInfo). You can access these
-fields using [`crate::Sample::get_info`] and [`crate::Sample::get_info_json`].
+Every sample contains an associated SampleInfo with meta-data about the
+sample:
 
-If a sample has invalid data, it still carries meta-data. You can detect this
-with [`crate::Sample::is_valid`]. For the list of available info fields and their
-meaning, refer to the RTI Connector documentation.
+```rust
+for sample in input.into_iter() {
+    let source_timestamp = sample.get_info("source_timestamp")?;
+    println!("source_timestamp: {:?}", source_timestamp);
+}
+```
 
-## Matching publications
+See [`crate::Sample::get_info`] for the list of available meta-data fields.
+
+*Connext DDS* can produce samples with invalid data, which contain meta-data
+only. For more information about this, see the Valid Data flag in the RTI
+Connext DDS Core Libraries User's Manual:
+<https://community.rti.com/static/documentation/connext-dds/7.3.0/doc/manuals/connext_dds_professional/users_manual/index.htm#users_manual/AccessingManagingInstances.htm#Valid>.
+These samples indicate a change in the instance state. Samples with invalid data
+still provide the following information:
+
+* The SampleInfo
+* When an instance is disposed (`sample.get_info("instance_state")` is
+  `NOT_ALIVE_DISPOSED`), the sample data contains the value of the key that has
+  been disposed. You can access the key fields only.
+
+## Matching with a publication
 
 Use [`crate::Input::wait_for_publications`] or
-[`crate::Input::wait_for_publications_with_timeout`] to wait for matched
-writers. These methods return the change in the number of matched publications
-since the last call.
+[`crate::Input::wait_for_publications_with_timeout`] to detect when a
+compatible publication is matched or unmatched. These methods return the change
+in the number of matched publications since the last call.
 
 You can inspect the current list with
 [`crate::Input::display_matched_publications`], which returns JSON.
