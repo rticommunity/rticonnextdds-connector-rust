@@ -28,7 +28,7 @@ This is the typical flow for using Connector: create a connector,
 obtain an output and input, write one sample, then read samples back. For
 example:
 
-```rust
+```rust,no_run
 use rtiddsconnector::{Connector, GlobalsDropGuard, Input, Output};
 
 fn main() -> rtiddsconnector::ConnectorFallible {

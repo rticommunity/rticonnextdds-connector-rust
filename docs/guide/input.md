@@ -19,14 +19,14 @@ fn get_input(connector: &Connector) -> rtiddsconnector::ConnectorResult<Input<'_
 
 Call [`crate::Input::take`] to access and remove samples:
 
-```rust
+```rust,compile_fail
 input.take()?;
 ```
 
 Or call [`crate::Input::read`] to access samples but leave them available for a
 future `read` or `take`:
 
-```rust
+```rust,compile_fail
 input.read()?;
 ```
 
@@ -44,7 +44,7 @@ samples; call `read` or `take` afterward.
 After calling [`crate::Input::read`] or [`crate::Input::take`], iterate over the
 samples:
 
-```rust
+```rust,compile_fail
 for sample in input.into_iter() {
     if sample.is_valid()? {
         println!("{}", sample);
@@ -54,7 +54,7 @@ for sample in input.into_iter() {
 
 To skip invalid samples, use `valid_only()`:
 
-```rust
+```rust,compile_fail
 for sample in input.into_iter().valid_only() {
     println!("{}", sample);
 }
@@ -83,7 +83,7 @@ resources sooner.
 Every sample contains an associated SampleInfo with meta-data about the
 sample:
 
-```rust
+```rust,compile_fail
 for sample in input.into_iter() {
     let source_timestamp = sample.get_info("source_timestamp")?;
     println!("source_timestamp: {:?}", source_timestamp);

@@ -53,7 +53,7 @@ Types are defined under `<types>` and associated with topics. Example:
 
 You can define types in IDL and convert them to XML with `rtiddsgen`:
 
-```
+```plain
 rtiddsgen -convertToXml MyTypes.idl
 ```
 
