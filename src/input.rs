@@ -21,6 +21,18 @@ use crate::{
 /// ```rust
 #[doc = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/snippets/input/using_sample.rs"))]
 /// ```
+///
+/// In addition to the data itself, each instance contains metadata which can be
+/// accessed with [`Sample::get_info`] and related methods.
+/// The list of available info fields include, but is not limited to:
+///
+/// - `valid_data`: A boolean indicating whether the sample contains valid data.
+/// - `source_timestamp`: A string representing the source timestamp of the sample.
+/// - `reception_timestamp`: A string representing the reception timestamp of the sample.
+/// - `instance_state`: A string representing the instance state of the sample.
+/// - `view_state`: A string representing the view state of the sample.
+/// - `sample_state`: A string representing the sample state of the sample.
+/// - `identity`: A string representing the identity of the sample publisher.
 #[derive(Debug)]
 pub struct Sample<'a> {
     /// The index of the sample within the [`Input`]'s samples cache.
