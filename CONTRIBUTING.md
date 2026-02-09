@@ -1,4 +1,11 @@
-# Contributing to RTI Connector for Rust
+# RTI Connector for Rust
+
+## Contributions
+
+This project is not open for contributions at this time.
+If you have suggestions or feedback, please share them through [Github Issues][gh-issues].
+
+[gh-issues]: https://www.github.com/rticommunity/rticonnextdds-connector-rust/issues "RTI Connector for Rust Github Issues"
 
 ## Development
 

@@ -7,7 +7,7 @@ examples in `snippets/` and `examples/` are also included in the
 ## Add the dependency
 
 ```console
-cargo add --git https://github.com/rticommunity/rticonnextdds-connector-rs
+cargo add --git https://github.com/rticommunity/rticonnextdds-connector-rust
 ```
 
 This command adds the Connector for Rust repository to your project. If you

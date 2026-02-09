@@ -1,6 +1,6 @@
 # RTI Connector for Rust (Experimental)
 
-RTI® Connext® is a connectivity software framework for integrating data sources
+_RTI Connext_ is a connectivity software framework for integrating data sources
 of all types. At its core is the world's leading ultra-high performance,
 distributed networking databus.
 
@@ -11,28 +11,25 @@ _RTI Connector for Rust_ is an experimental crate that provides Rust bindings
 for the _RTI Connector_ API. It does so by exposing a safe and idiomatic Rust
 interface over the underlying C API, in a crate called `rtiddsconnector`.
 
-> **IMPORTANT:**
-> _Connector for Rust_ is an experimental product; do not use it in production
-> systems. This release is an evaluation distribution; use it to explore using
-> _RTI Connext_ functionality into Rust applications. As an experimental RTI
-> product, we only offer support through the [RTI Community Forum][rti-community],
-> backed by RTI engineers who will answer your questions.
+## Experimental Status
+
+RTI Connector for Rust is **currently experimental** and intended for evaluation, prototyping,
+feedback and _Not recommended_ for production use.
+This crate is ideal for exploring Rust + DDS integration and helping shape the future of Rust
+support in RTI products.
 
 ## Documentation
 
-The `rtiddsconnector` crate provides Rust bindings for the _RTI Connector_ API,
-which allows easy integration of _RTI Connext_ DDS functionality into Rust
-applications.
+Refer to complete Rust API documentation [api-reference]:
 
 You can find documentation for _RTI Connext_, _RTI Connector_, and all other
 RTI products on the following sites:
 
 * [RTI Website](https://www.rti.com/)
 * [RTI Community][rti-community]
-* [_Connector for Rust_ API Reference][api-reference]
 
 [rti-community]: https://community.rti.com/ "RTI Community Forum"
-[api-reference]: https://rticommunity.github.io/rticonnextdds-connector-rs/ "RTI Connector for Rust API Reference"
+[api-reference]: https://rticommunity.github.io/rticonnextdds-connector-rust/ "RTI Connector for Rust API Reference"
 
 ## Quick Start
 
@@ -41,48 +38,51 @@ This crate is intended to be managed through Cargo as a Git repository. To add
 
 ```console
 cargo add \
-    --git https://www.github.com/rticommunity/rticonnextdds-connector-rs \
-    --branch <branch-name>
+    --git https://www.github.com/rticommunity/rticonnextdds-connector-rust
 ```
-
-`<branch-name>` is the branch you want to use; for example, `master` or a
-specific in-development branch. If `--branch` is not defined, `master` is used
-by default.
 
 Once the crate is available, you can start using it in your Rust code. See the
 quickstart file located at [`snippets/quickstart.rs`](snippets/quickstart.rs)
 for a simple example of how to use the _RTI Connector_ API.
 
-### Note on Native Libraries
+### Dependencies, Platform Support and Versioning
 
-This crate requires the _RTI Connector_ C libraries to be available both during
-the build and at runtime.
+Connector for Rust depends on native RTI Connector C libraries and is compatible with the latest
+release of [rticonnextdds-connector][rti-github-connector]. The platform availability and Connext
+Professional Release compatibility is linked to the Connector version and can be found in the
+release notes.
 
-At build time, the scripts in `build.rs` will attempt to download the required
-libraries from the [_RTI Connector_ releases in Github][rti-github-connector].
+At build time, the scripts in `build.rs` will download download the required libraries from the
+[_RTI Connector_ releases in Github][rti-github-connector]. For more information, see the
+[Connector for Rust API reference].
+
+At runtime, ensure that your system's linker can find the required libraries. This usually involves
+placing the native libraries next to the executable or using your system's dynamic library path
+environment variable (`LD_LIBRARY_PATH` on Linux, `DYLD_LIBRARY_PATH` on macOS, or `PATH` on Windows).
 
 [rti-github-connector]: https://github.com/rticommunity/rticonnextdds-connector/releases "RTI Connector Github repository"
 
-To tune this behavior, set the environment variable
-`RTI_CONNECTOR_VERSION` to the desired version (e.g., `1.4.0`) before building
-your application with Cargo. For more information, see
-[the _Connector for Rust_ API reference][api-reference].
-
-At runtime, ensure that your system's linker can find the
-required libraries. This usually involves placing the native libraries
-next to the executable or using your system's dynamic library path
-environment variable (`LD_LIBRARY_PATH` on Linux, `DYLD_LIBRARY_PATH` on
-macOS, or `PATH` on Windows).
-
 ## Examples
 
-The crate includes a `shapes` example compatible with *[RTI Shapes Demo](https://community.rti.com/static/documentation/connext-dds/current/doc/manuals/connext_dds_professional/tools/shapes_demo/shapes_demo/ShapesTitle.htm)*.
+The crate includes a `shapes` example compatible with _[RTI Shapes Demo][shapes-demo]_.
 This example can be run as a publisher or as a subscriber. You can read more
 about it [in its README](examples/shapes/README.md).
+
+[shapes-demo]: https://community.rti.com/static/documentation/connext-dds/current/doc/manuals/connext_dds_professional/tools/shapes_demo/shapes_demo/ShapesTitle.htm "RTI Shapes Demo"
 
 Additionally, the example contains read-only snippets in the `snippets` module
 that demonstrate various features of the _Connector_ API, and are used in the
 documentation.
+
+## Feedback and Support
+
+* Technical Issues: For bugs, build problems, or API-related issues, please open an [issue in GitHub][gh-issues].
+  Providing clear reproduction steps and environment details helps us respond more effectively.
+* Product Feedback and General Questions: For non-technical questions, usability feedback, or input
+  on future direction, please email [product-feedback@rti.com]. Your feedback helps shape the evolution
+  of Rust support in RTI products.
+
+[gh-issues]: https://www.github.com/rticommunity/rticonnextdds-connector-rust/issues "RTI Connector for Rust Github Issues"
 
 ## License
 
@@ -103,8 +103,3 @@ provided "as is", with no warranty of any type, including any warranty for
 fitness for any purpose. RTI is under no obligation to maintain or support the
 Software. RTI shall not be liable for any incidental or consequential damages
 arising out of the use or inability to use the software.
-
-## Contributing
-
-See the [CONTRIBUTING.md](CONTRIBUTING.md) file for contribution and
-development guidelines.
