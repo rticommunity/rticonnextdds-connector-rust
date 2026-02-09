@@ -81,11 +81,11 @@ pub struct ShapeType {
     /// The color of the shape (used as the key field)
     pub color: String,
     /// The X coordinate of the shape
-    pub x: f64,
+    pub x: i64,
     /// The Y coordinate of the shape
-    pub y: f64,
+    pub y: i64,
     /// The size of the shape
-    pub shapesize: f64,
+    pub shapesize: i64,
 }
 
 /// Command-line arguments for the shapes example application

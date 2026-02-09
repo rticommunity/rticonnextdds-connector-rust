@@ -87,13 +87,13 @@ pub fn main(
             TypedMode::Disabled => {
                 // Manual field setting when typed feature is disabled
                 instance
-                    .set_number("x", shape.x)
+                    .set_number("x", shape.x as f64)
                     .expect("Failed to set x coordinate");
                 instance
-                    .set_number("y", shape.y)
+                    .set_number("y", shape.y as f64)
                     .expect("Failed to set y coordinate");
                 instance
-                    .set_number("shapesize", shape.shapesize)
+                    .set_number("shapesize", shape.shapesize as f64)
                     .expect("Failed to set shapesize");
                 instance
                     .set_string("color", &shape.color)
@@ -122,9 +122,10 @@ fn compute_sample_for_id(sample_id: usize) -> super::ShapeType {
     const CENTER: (f64, f64) = (CANVAS.0 / 2.0, CANVAS.1 / 2.0);
     const INCREMENT: (f64, f64) = (CANVAS.0 / 5.0, CANVAS.1 / 5.0);
 
-    let x = CENTER.0 + f64::sin(sample_id as f64) * INCREMENT.0;
-    let y = CENTER.1 + f64::cos(sample_id as f64) * INCREMENT.1;
-    let shapesize = CANVAS.0 / 10.0 + f64::cos(sample_id as f64) * CANVAS.0 / 20.0;
+    let x = (CENTER.0 + f64::sin(sample_id as f64) * INCREMENT.0) as i64;
+    let y = (CENTER.1 + f64::cos(sample_id as f64) * INCREMENT.1) as i64;
+    let shapesize =
+        (CANVAS.0 / 10.0 + f64::cos(sample_id as f64) * CANVAS.0 / 20.0) as i64;
 
     super::ShapeType {
         color: COLOR.to_string(),

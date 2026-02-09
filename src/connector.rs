@@ -141,12 +141,10 @@ impl Connector {
                 "<Unknown RTI Connector for Rust version>".to_string(),
             ));
 
-        let version_string_to_return = format!(
+        format!(
             "RTI Connector for Rust, version {}\n{}\n{}",
             VERSION_STRING, ndds_build_id_string, rtiddsconnector_build_id_string
-        );
-        println!("{}", version_string_to_return);
-        version_string_to_return
+        )
     }
 
     /// Get the last error message from the underlying RTI Connector C API.
