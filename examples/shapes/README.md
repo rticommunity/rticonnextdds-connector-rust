@@ -1,7 +1,7 @@
 # Shapes Example
 
 This example demonstrates how to create and manipulate ShapeType data using
-`rtiddsconnector`. It bundles publisher and subscriber functionality in a
+`rtiddsconnector`. Publisher and subscriber functionality is bundled in a
 single application for simplicity.
 
 See [the `shapes` documentation in the API reference][api-reference] for more details

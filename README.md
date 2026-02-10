@@ -13,14 +13,14 @@ interface over the underlying C API, in a crate called `rtiddsconnector`.
 
 ## Experimental Status
 
-RTI Connector for Rust is **currently experimental** and intended for evaluation, prototyping,
+_RTI Connector for Rust_ is **currently experimental** and intended for evaluation, prototyping,
 feedback and _Not recommended_ for production use.
-This crate is ideal for exploring Rust + DDS integration and helping shape the future of Rust
+Use this crate to explore Rust + DDS integration and help shape the future of Rust
 support in RTI products.
 
 ## Documentation
 
-Refer to complete Rust API documentation [api-reference]:
+See the [Connector for Rust API][api-reference] for complete API documentation.
 
 You can find documentation for _RTI Connext_, _RTI Connector_, and all other
 RTI products on the following sites:
@@ -45,16 +45,16 @@ Once the crate is available, you can start using it in your Rust code. See the
 quickstart file located at [`snippets/quickstart.rs`](snippets/quickstart.rs)
 for a simple example of how to use the _RTI Connector_ API.
 
-### Dependencies, Platform Support and Versioning
+## Dependencies, Platform Support, and Versioning
 
 Connector for Rust depends on native RTI Connector C libraries and is compatible with the latest
-release of [rticonnextdds-connector][rti-github-connector]. The platform availability and Connext
-Professional Release compatibility is linked to the Connector version and can be found in the
+release of [rticonnextdds-connector][rti-github-connector]. The platform availability and _Connext_
+_Professional_ release compatibility is linked to the _Connector_ version and can be found in the
 release notes.
 
-At build time, the scripts in `build.rs` will download download the required libraries from the
+At build time, the scripts in `build.rs` will download the required libraries from the
 [_RTI Connector_ releases in Github][rti-github-connector]. For more information, see the
-[Connector for Rust API reference].
+[Connector for Rust API reference][api-reference].
 
 At runtime, ensure that your system's linker can find the required libraries. This usually involves
 placing the native libraries next to the executable or using your system's dynamic library path
@@ -66,20 +66,20 @@ environment variable (`LD_LIBRARY_PATH` on Linux, `DYLD_LIBRARY_PATH` on macOS, 
 
 The crate includes a `shapes` example compatible with _[RTI Shapes Demo][shapes-demo]_.
 This example can be run as a publisher or as a subscriber. You can read more
-about it [in its README](examples/shapes/README.md).
+about it in the example's [README](examples/shapes/README.md).
 
 [shapes-demo]: https://community.rti.com/static/documentation/connext-dds/current/doc/manuals/connext_dds_professional/tools/shapes_demo/shapes_demo/ShapesTitle.htm "RTI Shapes Demo"
 
-Additionally, the example contains read-only snippets in the `snippets` module
+The example contains read-only snippets in the `snippets` module
 that demonstrate various features of the _Connector_ API, and are used in the
 documentation.
 
 ## Feedback and Support
 
-* Technical Issues: For bugs, build problems, or API-related issues, please open an [issue in GitHub][gh-issues].
-  Providing clear reproduction steps and environment details helps us respond more effectively.
+* Technical Issues: For bugs, build problems, or API-related issues, open an [issue in GitHub][gh-issues].
+  Provide clear reproduction steps and environment details to help us respond more effectively.
 * Product Feedback and General Questions: For non-technical questions, usability feedback, or input
-  on future direction, please email [product-feedback@rti.com]. Your feedback helps shape the evolution
+  on future direction, email [product-feedback@rti.com]. Your feedback helps shape the evolution
   of Rust support in RTI products.
 
 [gh-issues]: https://www.github.com/rticommunity/rticonnextdds-connector-rust/issues "RTI Connector for Rust Github Issues"
