@@ -18,6 +18,8 @@ feedback and _Not recommended_ for production use.
 Use this crate to explore Rust + DDS integration and help shape the future of Rust
 support in RTI products.
 
+**Do not use Connector for Rust in production**.
+
 ## Documentation
 
 See the [Connector for Rust API][api-reference] for complete API documentation.
