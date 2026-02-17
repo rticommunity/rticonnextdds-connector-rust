@@ -189,13 +189,23 @@ impl GitHubSource {
         }
     }
 
+    fn add_github_token_header<T>(
+        mut request: ureq::RequestBuilder<T>,
+    ) -> ureq::RequestBuilder<T> {
+        if let Ok(token) = env::var("GITHUB_TOKEN") {
+            request = request.header("Authorization", format!("Bearer {}", token));
+        }
+
+        request
+    }
+
     fn fetch_release_asset_url(&self) -> Result<String> {
         let release_url = if self.version == "latest" {
             format!("{}/releases/latest", self.api_root_uri)
         } else {
             format!("{}/releases/tags/v{}", self.api_root_uri, self.version)
         };
-        let release_json = ureq::get(&release_url)
+        let release_json = Self::add_github_token_header(ureq::get(&release_url))
             .header("Accept", "application/vnd.github+json")
             .call()
             .map_err(|e| {
@@ -230,7 +240,7 @@ impl GitHubSource {
     }
 
     fn download_zip_data(&self, asset_url: &str) -> Result<Vec<u8>> {
-        let request_body = ureq::get(asset_url)
+        let request_body = Self::add_github_token_header(ureq::get(asset_url))
             .header("Accept", "application/octet-stream")
             .call()
             .map_err(|e| format!("Failed to download asset: {}", e))?
