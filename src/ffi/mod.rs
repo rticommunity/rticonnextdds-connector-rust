@@ -20,7 +20,7 @@ pub use rtiddsconnector::ReturnCode;
 
 use crate::result::ErrorKind;
 use rtiddsconnector::{ConnectorIndex, NativeAllocatedString, NativeStringTrait};
-use std::ffi::CString;
+use std::{ffi::CString, ptr::NonNull};
 
 /// Helper for converting a [`std::ffi::NulError`] into a [`ConnectorError`][crate::ConnectorError]
 impl From<std::ffi::NulError> for crate::ConnectorError {
@@ -67,12 +67,12 @@ impl GlobalsDropGuard {
 
 /// Newtype wrappers for native Sample pointers
 #[allow(unused)]
-pub struct NativeSample(*const rtiddsconnector::SamplePtr);
+pub struct FfiSample(NonNull<rtiddsconnector::OpaqueSample>);
 
 /// Newtype wrappers for native DataReader pointers
-pub struct NativeInput(*const rtiddsconnector::DataReaderPtr);
+pub struct FfiInput(NonNull<rtiddsconnector::OpaqueDataReader>);
 
-impl NativeInput {
+impl FfiInput {
     pub fn wait_for_matched_publication(
         &self,
         timeout: Option<i32>,
@@ -106,9 +106,9 @@ impl NativeInput {
 }
 
 /// Newtype wrappers for native DataWriter pointers
-pub struct NativeOutput(*const rtiddsconnector::DataWriterPtr);
+pub struct FfiOutput(NonNull<rtiddsconnector::OpaqueDataWriter>);
 
-impl NativeOutput {
+impl FfiOutput {
     pub fn wait_for_matched_subscription(
         &self,
         timeout: Option<i32>,
@@ -145,9 +145,9 @@ impl NativeOutput {
 }
 
 /// Newtype wrappers for native Connector pointers
-pub struct NativeConnector(*const rtiddsconnector::ConnectorPtr);
+pub struct FfiConnector(NonNull<rtiddsconnector::OpaqueConnector>);
 
-impl Drop for NativeConnector {
+impl Drop for FfiConnector {
     fn drop(&mut self) {
         if let Err(e) = self.delete() {
             eprintln!("ERROR: failed to delete native participant: {}", e);
@@ -155,45 +155,42 @@ impl Drop for NativeConnector {
     }
 }
 
-impl NativeConnector {
+impl FfiConnector {
     pub fn new(
         connector_name: &str,
         config_file: &str,
-    ) -> crate::ConnectorResult<NativeConnector> {
+    ) -> crate::ConnectorResult<FfiConnector> {
         let config_name = CString::new(connector_name)?;
         let config_file = CString::new(config_file)?;
 
-        unsafe {
+        NonNull::new(unsafe {
             rtiddsconnector::RTI_Connector_new(
                 config_name.as_ptr(),
                 config_file.as_ptr(),
                 &rtiddsconnector::ConnectorOptions::default(),
             )
-            .as_ref()
-        }
-        .map(|ptr| NativeConnector(ptr))
+        })
+        .map(FfiConnector)
         .ok_or_else(|| ErrorKind::entity_not_found_error(connector_name).into())
     }
 
-    pub fn get_output(&self, output_name: &str) -> crate::ConnectorResult<NativeOutput> {
+    pub fn get_output(&self, output_name: &str) -> crate::ConnectorResult<FfiOutput> {
         let entity_name = CString::new(output_name)?;
 
-        unsafe {
+        NonNull::new(unsafe {
             rtiddsconnector::RTI_Connector_get_datawriter(self.0, entity_name.as_ptr())
-                .as_ref()
-        }
-        .map(|ptr| NativeOutput(ptr))
+        })
+        .map(FfiOutput)
         .ok_or_else(|| ErrorKind::entity_not_found_error(output_name).into())
     }
 
-    pub fn get_input(&self, input_name: &str) -> crate::ConnectorResult<NativeInput> {
+    pub fn get_input(&self, input_name: &str) -> crate::ConnectorResult<FfiInput> {
         let entity_name = CString::new(input_name)?;
 
-        unsafe {
+        NonNull::new(unsafe {
             rtiddsconnector::RTI_Connector_get_datareader(self.0, entity_name.as_ptr())
-                .as_ref()
-        }
-        .map(|ptr| NativeInput(ptr))
+        })
+        .map(FfiInput)
         .ok_or_else(|| ErrorKind::entity_not_found_error(input_name).into())
     }
 
@@ -202,25 +199,24 @@ impl NativeConnector {
         &self,
         output_name: &str,
         index: usize,
-    ) -> crate::ConnectorResult<NativeSample> {
+    ) -> crate::ConnectorResult<FfiSample> {
         let entity_name: CString = CString::new(output_name)?;
         let index: ConnectorIndex = index.try_into()?;
 
-        unsafe {
+        NonNull::new(unsafe {
             rtiddsconnector::RTI_Connector_get_native_sample(
                 self.0,
                 entity_name.as_ptr(),
                 index,
             )
-            .as_ref()
-        }
-        .map(|ptr| NativeSample(ptr))
+        })
+        .map(FfiSample)
         .ok_or_else(|| ErrorKind::entity_not_found_error(output_name).into())
     }
 
     fn delete(&mut self) -> crate::ConnectorFallible {
         InvokeResult::never_fails(|| unsafe {
-            rtiddsconnector::RTI_Connector_delete(self.0)
+            rtiddsconnector::RTI_Connector_delete(self.0.as_ptr())
         })
         .into()
     }
@@ -649,7 +645,7 @@ impl NativeConnector {
     pub fn get_native_instance(
         &self,
         entity_name: &str,
-    ) -> crate::ConnectorResult<*const rtiddsconnector::SamplePtr> {
+    ) -> crate::ConnectorResult<*const rtiddsconnector::OpaqueSample> {
         unimplemented!();
     }
 

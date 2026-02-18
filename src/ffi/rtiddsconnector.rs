@@ -8,7 +8,7 @@
 
 //! Everything related to the `rtiddsconnector` C API, including types, functions and helpers.
 
-use std::ffi;
+use std::{ffi, ptr::NonNull};
 
 // C representation of the ReturnCode enum.
 pub type NativeReturnCode = ffi::c_int;
@@ -79,16 +79,16 @@ impl ReturnCode {
 }
 
 #[repr(transparent)]
-pub struct ConnectorPtr(ffi::c_void);
+pub struct OpaqueConnector(ffi::c_void);
 
 #[repr(transparent)]
-pub struct DataWriterPtr(ffi::c_void);
+pub struct OpaqueDataWriter(ffi::c_void);
 
 #[repr(transparent)]
-pub struct DataReaderPtr(ffi::c_void);
+pub struct OpaqueDataReader(ffi::c_void);
 
 #[repr(transparent)]
-pub struct SamplePtr(ffi::c_void);
+pub struct OpaqueSample(ffi::c_void);
 
 pub trait NativeStringTrait {
     fn as_raw_ptr(&self) -> *const ffi::c_char;
@@ -203,118 +203,118 @@ unsafe extern "C" {
         config_name: *const std::ffi::c_char,
         config_file: *const std::ffi::c_char,
         options: *const ConnectorOptions,
-    ) -> *mut ConnectorPtr;
+    ) -> *mut OpaqueConnector;
 
-    pub unsafe fn RTI_Connector_delete(connector: *const ConnectorPtr);
+    pub unsafe fn RTI_Connector_delete(connector: *mut OpaqueConnector);
 
     pub unsafe fn RTI_Connector_get_datawriter(
-        connector: *const ConnectorPtr,
+        connector: NonNull<OpaqueConnector>,
         entity_name: *const std::ffi::c_char,
-    ) -> *mut DataWriterPtr;
+    ) -> *mut OpaqueDataWriter;
 
     pub unsafe fn RTI_Connector_get_datareader(
-        connector: *const ConnectorPtr,
+        connector: NonNull<OpaqueConnector>,
         entity_name: *const std::ffi::c_char,
-    ) -> *mut DataReaderPtr;
+    ) -> *mut OpaqueDataReader;
 
     pub unsafe fn RTI_Connector_get_native_sample(
-        connector: *const ConnectorPtr,
+        connector: NonNull<OpaqueConnector>,
         entity_name: *const std::ffi::c_char,
         index: ConnectorIndex,
-    ) -> *const SamplePtr;
+    ) -> *mut OpaqueSample;
 
     pub unsafe fn RTI_Connector_set_number_into_samples(
-        connector: *const ConnectorPtr,
+        connector: NonNull<OpaqueConnector>,
         entity_name: *const std::ffi::c_char,
         name: *const std::ffi::c_char,
         value: ffi::c_double,
     ) -> NativeReturnCode;
 
     pub unsafe fn RTI_Connector_set_boolean_into_samples(
-        connector: *const ConnectorPtr,
+        connector: NonNull<OpaqueConnector>,
         entity_name: *const std::ffi::c_char,
         name: *const std::ffi::c_char,
         value: ffi::c_int, // boolean
     ) -> NativeReturnCode;
 
     pub unsafe fn RTI_Connector_set_string_into_samples(
-        connector: *const ConnectorPtr,
+        connector: NonNull<OpaqueConnector>,
         entity_name: *const std::ffi::c_char,
         name: *const std::ffi::c_char,
         value: *const std::ffi::c_char,
     ) -> NativeReturnCode;
 
     pub unsafe fn RTI_Connector_clear_member(
-        connector: *const ConnectorPtr,
+        connector: NonNull<OpaqueConnector>,
         entity_name: *const std::ffi::c_char,
         name: *const std::ffi::c_char,
     ) -> NativeReturnCode;
 
     pub unsafe fn RTI_Connector_write(
-        connector: *const ConnectorPtr,
+        connector: NonNull<OpaqueConnector>,
         entity_name: *const std::ffi::c_char,
         params_json: *const std::ffi::c_char,
     ) -> NativeReturnCode;
 
     pub unsafe fn RTI_Connector_wait_for_matched_subscription(
-        writer: *const DataWriterPtr,
+        writer: NonNull<OpaqueDataWriter>,
         timeout: ffi::c_int,
         current_count_change: *mut ffi::c_int,
     ) -> NativeReturnCode;
 
     pub unsafe fn RTI_Connector_get_matched_subscriptions(
-        writer: *const DataWriterPtr,
+        writer: NonNull<OpaqueDataWriter>,
         json_str: *mut NativeAllocatedString,
     ) -> NativeReturnCode;
 
     pub unsafe fn RTI_Connector_wait_for_acknowledgments(
-        writer: *const DataWriterPtr,
+        writer: NonNull<OpaqueDataWriter>,
         timeout: ffi::c_int,
     ) -> NativeReturnCode;
 
     pub unsafe fn RTI_Connector_read(
-        connector: *const ConnectorPtr,
+        connector: NonNull<OpaqueConnector>,
         entity_name: *const std::ffi::c_char,
     ) -> NativeReturnCode;
 
     pub unsafe fn RTI_Connector_take(
-        connector: *const ConnectorPtr,
+        connector: NonNull<OpaqueConnector>,
         entity_name: *const std::ffi::c_char,
     ) -> NativeReturnCode;
 
     pub unsafe fn RTI_Connector_return_loan(
-        connector: *const ConnectorPtr,
+        connector: NonNull<OpaqueConnector>,
         entity_name: *const std::ffi::c_char,
     ) -> NativeReturnCode;
 
     pub unsafe fn RTI_Connector_wait_for_data(
-        connector: *const ConnectorPtr,
+        connector: NonNull<OpaqueConnector>,
         timeout: ffi::c_int,
     ) -> NativeReturnCode;
 
     pub unsafe fn RTI_Connector_wait_for_data_on_reader(
-        reader: *const DataReaderPtr,
+        reader: NonNull<OpaqueDataReader>,
         timeout: ffi::c_int,
     ) -> NativeReturnCode;
 
     pub unsafe fn RTI_Connector_wait_for_matched_publication(
-        reader: *const DataReaderPtr,
+        reader: NonNull<OpaqueDataReader>,
         timeout: ffi::c_int,
         current_count_change: *mut ffi::c_int,
     ) -> NativeReturnCode;
 
     pub unsafe fn RTI_Connector_get_matched_publications(
-        reader: *const DataReaderPtr,
+        reader: NonNull<OpaqueDataReader>,
         json_str: *mut NativeAllocatedString,
     ) -> NativeReturnCode;
 
     pub unsafe fn RTI_Connector_clear(
-        connector: *const ConnectorPtr,
+        connector: NonNull<OpaqueConnector>,
         entity_name: *const std::ffi::c_char,
     ) -> NativeReturnCode;
 
     pub unsafe fn RTI_Connector_get_boolean_from_infos(
-        connector: *const ConnectorPtr,
+        connector: NonNull<OpaqueConnector>,
         return_value: *mut ffi::c_int, // boolean
         entity_name: *const std::ffi::c_char,
         index: ConnectorIndex,
@@ -322,7 +322,7 @@ unsafe extern "C" {
     ) -> NativeReturnCode;
 
     pub unsafe fn RTI_Connector_get_json_from_infos(
-        connector: *const ConnectorPtr,
+        connector: NonNull<OpaqueConnector>,
         entity_name: *const std::ffi::c_char,
         index: ConnectorIndex,
         name: *const std::ffi::c_char,
@@ -330,13 +330,13 @@ unsafe extern "C" {
     ) -> NativeReturnCode;
 
     pub unsafe fn RTI_Connector_get_sample_count(
-        connector: *const ConnectorPtr,
+        connector: NonNull<OpaqueConnector>,
         entity_name: *const std::ffi::c_char,
         out_value: *mut ffi::c_double,
     ) -> NativeReturnCode;
 
     pub unsafe fn RTI_Connector_get_number_from_sample(
-        connector: *const ConnectorPtr,
+        connector: NonNull<OpaqueConnector>,
         return_value: *mut ffi::c_double,
         entity_name: *const std::ffi::c_char,
         index: ConnectorIndex,
@@ -344,7 +344,7 @@ unsafe extern "C" {
     ) -> NativeReturnCode;
 
     pub unsafe fn RTI_Connector_get_boolean_from_sample(
-        connector: *const ConnectorPtr,
+        connector: NonNull<OpaqueConnector>,
         return_value: *mut ffi::c_int, // boolean
         entity_name: *const std::ffi::c_char,
         index: ConnectorIndex,
@@ -352,7 +352,7 @@ unsafe extern "C" {
     ) -> NativeReturnCode;
 
     pub unsafe fn RTI_Connector_get_string_from_sample(
-        connector: *const ConnectorPtr,
+        connector: NonNull<OpaqueConnector>,
         return_value: *mut NativeAllocatedString,
         entity_name: *const std::ffi::c_char,
         index: ConnectorIndex,
@@ -360,7 +360,7 @@ unsafe extern "C" {
     ) -> NativeReturnCode;
 
     pub unsafe fn RTI_Connector_get_any_from_sample(
-        connector: *const ConnectorPtr,
+        connector: NonNull<OpaqueConnector>,
         double_value_out: *mut ffi::c_double,
         bool_value_out: *mut ffi::c_int, // boolean
         string_value_out: *mut NativeAllocatedString,
@@ -371,7 +371,7 @@ unsafe extern "C" {
     ) -> NativeReturnCode;
 
     pub unsafe fn RTI_Connector_get_any_from_info(
-        connector: *const ConnectorPtr,
+        connector: NonNull<OpaqueConnector>,
         double_value_out: *mut ffi::c_double,
         bool_value_out: *mut ffi::c_int, // boolean
         string_value_out: *mut NativeAllocatedString,
@@ -382,14 +382,14 @@ unsafe extern "C" {
     ) -> NativeReturnCode;
 
     pub unsafe fn RTI_Connector_get_json_sample(
-        connector: *const ConnectorPtr,
+        connector: NonNull<OpaqueConnector>,
         entity_name: *const std::ffi::c_char,
         index: ConnectorIndex,
         json_str: *mut NativeAllocatedString,
     ) -> NativeReturnCode;
 
     pub unsafe fn RTI_Connector_get_json_member(
-        connector: *const ConnectorPtr,
+        connector: NonNull<OpaqueConnector>,
         entity_name: *const std::ffi::c_char,
         index: ConnectorIndex,
         member_name: *const std::ffi::c_char,
@@ -397,7 +397,7 @@ unsafe extern "C" {
     ) -> NativeReturnCode;
 
     pub unsafe fn RTI_Connector_set_json_instance(
-        connector: *const ConnectorPtr,
+        connector: NonNull<OpaqueConnector>,
         entity_name: *const std::ffi::c_char,
         json: *const std::ffi::c_char,
     ) -> NativeReturnCode;
@@ -406,13 +406,13 @@ unsafe extern "C" {
 
     #[allow(unused)]
     pub unsafe fn RTI_Connector_get_native_instance(
-        connector: *const ConnectorPtr,
+        connector: NonNull<OpaqueConnector>,
         entity_name: *const std::ffi::c_char,
-        native_pointer: *mut *const SamplePtr,
+        native_pointer: *mut *const OpaqueSample,
     ) -> NativeReturnCode;
 
     pub unsafe fn RTIDDSConnector_getJSONInstance(
-        connector: *const ConnectorPtr,
+        connector: NonNull<OpaqueConnector>,
         entity_name: *const std::ffi::c_char,
     ) -> NativeAllocatedString;
 

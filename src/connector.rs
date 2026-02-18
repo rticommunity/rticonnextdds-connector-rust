@@ -9,7 +9,7 @@
 #![doc = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/docs/connector.md"))]
 
 use crate::{
-    ConnectorFallible, ConnectorResult, Input, Output, ffi::NativeConnector,
+    ConnectorFallible, ConnectorResult, Input, Output, ffi::FfiConnector,
     result::ErrorKind,
 };
 use std::{
@@ -99,7 +99,7 @@ pub struct Connector {
     name: String,
 
     /// The native connector instance, protected by a RwLock for thread-safe access.
-    native: RwLock<NativeConnector>,
+    native: RwLock<FfiConnector>,
 
     /// Thread-safe holders for Input entities.
     inputs: ThreadSafeEntityHolder<InputRecord>,
@@ -136,7 +136,7 @@ impl Connector {
         static VERSION_STRING: &str = env!("CARGO_PKG_VERSION");
 
         let (ndds_build_id_string, rtiddsconnector_build_id_string) =
-            NativeConnector::get_build_versions().unwrap_or((
+            FfiConnector::get_build_versions().unwrap_or((
                 "<Unknown RTI Connext version>".to_string(),
                 "<Unknown RTI Connector for Rust version>".to_string(),
             ));
@@ -149,7 +149,7 @@ impl Connector {
 
     /// Get the last error message from the underlying RTI Connector C API.
     pub(crate) fn get_last_error_message() -> Option<String> {
-        NativeConnector::get_last_error_message()
+        FfiConnector::get_last_error_message()
     }
 
     /// Create a new [`Connector`] from a named configuration contained
@@ -157,14 +157,14 @@ impl Connector {
     pub fn new(config_name: &str, config_file: &str) -> ConnectorResult<Connector> {
         static NATIVE_CONNECTOR_CREATION_LOCK: Mutex<()> = Mutex::new(());
 
-        let native: NativeConnector = {
+        let native: FfiConnector = {
             let _guard = NATIVE_CONNECTOR_CREATION_LOCK
                 .lock()
                 .inspect_err(|_| {
                     eprintln!("An error occurred while trying to lock the global native connector creation lock, continuing anyway...");
                 })
                 .unwrap_or_else(|poisoned| poisoned.into_inner());
-            NativeConnector::new(config_name, config_file)?
+            FfiConnector::new(config_name, config_file)?
         };
 
         Ok(Connector {
@@ -257,7 +257,7 @@ impl Connector {
     /// Get immutable access to the [`NativeConnector`] (for read operations)
     pub(crate) fn native_ref(
         &self,
-    ) -> ConnectorResult<std::sync::RwLockReadGuard<'_, NativeConnector>> {
+    ) -> ConnectorResult<std::sync::RwLockReadGuard<'_, FfiConnector>> {
         self.native.read().map_err(|_| {
             ErrorKind::lock_poisoned_error(
                 "Another thread panicked while holding the native connector lock",
@@ -269,7 +269,7 @@ impl Connector {
     /// Get mutable access to the [`NativeConnector`] (for write operations)
     pub(crate) fn native_mut(
         &self,
-    ) -> ConnectorResult<std::sync::RwLockWriteGuard<'_, NativeConnector>> {
+    ) -> ConnectorResult<std::sync::RwLockWriteGuard<'_, FfiConnector>> {
         self.native.write().map_err(|_| {
             ErrorKind::lock_poisoned_error(
                 "Another thread panicked while holding the native connector lock",
