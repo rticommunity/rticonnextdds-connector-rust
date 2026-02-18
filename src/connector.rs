@@ -254,7 +254,7 @@ impl Connector {
         self.outputs.release_entity(name)
     }
 
-    /// Get immutable access to the [`NativeConnector`] (for read operations)
+    /// Get immutable access to the [`FfiConnector`] (for read operations)
     pub(crate) fn native_ref(
         &self,
     ) -> ConnectorResult<std::sync::RwLockReadGuard<'_, FfiConnector>> {
@@ -266,7 +266,7 @@ impl Connector {
         })
     }
 
-    /// Get mutable access to the [`NativeConnector`] (for write operations)
+    /// Get mutable access to the [`FfiConnector`] (for write operations)
     pub(crate) fn native_mut(
         &self,
     ) -> ConnectorResult<std::sync::RwLockWriteGuard<'_, FfiConnector>> {
