@@ -165,6 +165,7 @@ impl LibraryProvisioner {
 struct GitHubSource {
     version: String,
     api_root_uri: String,
+    api_token: Option<String>,
 }
 
 impl LibrarySource for GitHubSource {
@@ -181,12 +182,31 @@ impl LibrarySource for GitHubSource {
 
 impl GitHubSource {
     fn new(version: String) -> Self {
+        println!("cargo:rerun-if-env-changed=GITHUB_TOKEN");
+
+        let api_token = env::var("GITHUB_TOKEN")
+            .ok()
+            .map(|token| token.trim().to_string())
+            .filter(|token| !token.is_empty());
+
         Self {
             version,
             api_root_uri:
                 "https://api.github.com/repos/rticommunity/rticonnextdds-connector"
                     .to_string(),
+            api_token,
         }
+    }
+
+    fn add_github_token_header<T>(
+        &self,
+        mut request: ureq::RequestBuilder<T>,
+    ) -> ureq::RequestBuilder<T> {
+        if let Some(token) = &self.api_token {
+            request = request.header("Authorization", format!("Bearer {}", token));
+        }
+
+        request
     }
 
     fn fetch_release_asset_url(&self) -> Result<String> {
@@ -195,7 +215,8 @@ impl GitHubSource {
         } else {
             format!("{}/releases/tags/v{}", self.api_root_uri, self.version)
         };
-        let release_json = ureq::get(&release_url)
+        let release_json = self
+            .add_github_token_header(ureq::get(&release_url))
             .header("Accept", "application/vnd.github+json")
             .call()
             .map_err(|e| {
@@ -215,22 +236,28 @@ impl GitHubSource {
         #[derive(Debug, serde::Deserialize)]
         struct Asset {
             name: String,
-            browser_download_url: String,
+            id: u64,
         }
 
         let release: Release = serde_json::from_str(&release_json)
             .map_err(|e| format!("Failed to parse release JSON: {}", e))?;
 
-        release
+        let asset_id = release
             .assets
             .into_iter()
             .find(|a| a.name.starts_with("connectorlibs") && a.name.ends_with(".zip"))
-            .map(|asset| asset.browser_download_url)
-            .ok_or_else(|| "No connectorlibs ZIP asset found in release".to_string())
+            .map(|asset| asset.id)
+            .ok_or_else(|| "No connectorlibs ZIP asset found in release".to_string())?;
+
+        Ok(format!(
+            "{}/releases/assets/{}",
+            self.api_root_uri, asset_id
+        ))
     }
 
     fn download_zip_data(&self, asset_url: &str) -> Result<Vec<u8>> {
-        let request_body = ureq::get(asset_url)
+        let request_body = self
+            .add_github_token_header(ureq::get(asset_url))
             .header("Accept", "application/octet-stream")
             .call()
             .map_err(|e| format!("Failed to download asset: {}", e))?
