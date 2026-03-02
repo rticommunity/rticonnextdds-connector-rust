@@ -1,0 +1,47 @@
+name: Feature Request / Improvement
+description: Suggest an improvement or new feature for RTI Connector for Rust
+title: "[Improvement]: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for suggesting an improvement! Your feedback helps shape the future of RTI Connector for Rust.
+
+  - type: textarea
+    id: use-case
+    attributes:
+      label: Use Case
+      description: Describe your use case. How would this improvement benefit you and others?
+      placeholder: This would help when...
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposed-solution
+    attributes:
+      label: Proposed Solution
+      description: Describe your ideal solution or enhancement
+      placeholder: |
+        I'd like to see...
+
+        Example API:
+        ```rust
+        // Example of how the feature might work
+        ```
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives Considered
+      description: Have you considered any alternative solutions or workarounds?
+      placeholder: I've tried... but it doesn't work well because...
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional Context
+      description: Add any other context, screenshots, links to similar features in other libraries, etc.
+      placeholder: Any additional information that might help...

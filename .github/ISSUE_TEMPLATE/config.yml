@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: View API Documentation
+    url: https://docs.rs/rtiddsconnector/latest/rtiddsconnector/
+    about: View the latest API documentation on docs.rs
