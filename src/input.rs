@@ -338,9 +338,6 @@ impl Input {
 
     /// Return the loan on the samples previously taken
     /// from the underlying `DataReader`'s cache.
-    ///
-    /// See [SampleIterator] for concurrency considerations on outstanding
-    /// iterators when calling this function.
     pub fn return_loan(&mut self) -> ConnectorFallible {
         self.impl_input_operation(InputOperation::Return)
     }
