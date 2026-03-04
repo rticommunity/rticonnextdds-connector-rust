@@ -376,8 +376,6 @@ impl Input {
     }
 
     fn impl_wait_for_data(&self, timeout_ms: Option<i32>) -> ConnectorFallible {
-        let _lock = self.parent.native()?;
-
         self.native.wait_for_data(timeout_ms)
     }
 
@@ -402,8 +400,6 @@ impl Input {
         &self,
         timeout_ms: Option<i32>,
     ) -> ConnectorResult<i32> {
-        let _lock = self.parent.native()?;
-
         self.native.wait_for_matched_publication(timeout_ms)
     }
 
@@ -482,8 +478,6 @@ impl Input {
 
     /// Display the list of publications currently matched.
     pub fn display_matched_publications(&self) -> ConnectorResult<String> {
-        let _lock = self.parent.native()?;
-
         self.native.get_matched_publications()
     }
 }

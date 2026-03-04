@@ -312,8 +312,6 @@ impl Output {
 
     /// Implementation of wait functionality.
     fn impl_wait(&self, timeout_ms: Option<i32>) -> ConnectorFallible {
-        let _lock = self.parent.native()?;
-
         self.native.wait_for_acknowledgments(timeout_ms)
     }
 
@@ -338,15 +336,11 @@ impl Output {
         &self,
         timeout_ms: Option<i32>,
     ) -> ConnectorResult<i32> {
-        let _lock = self.parent.native()?;
-
         self.native.wait_for_matched_subscription(timeout_ms)
     }
 
     /// Display the matched subscriptions as a JSON string.
     pub fn display_matched_subscriptions(&self) -> ConnectorResult<String> {
-        let _lock = self.parent.native()?;
-
         self.native.get_matched_subscriptions()
     }
 }
