@@ -9,16 +9,19 @@
 #![doc = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/docs/output.md"))]
 
 use crate::{
-    Connector, ConnectorFallible, ConnectorResult, SelectedValue,
+    ConnectorFallible, ConnectorResult, SelectedValue,
     result::{ErrorKind, InvalidErrorKind},
 };
+
+#[cfg(doc)]
+use crate::Connector;
 
 /// An interface to modify the data held by a given [`Output`] instance.
 ///
 /// ```rust
 #[doc = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/snippets/output/using_instance.rs"))]
 /// ```
-pub struct Instance<'a>(&'a Output<'a>);
+pub struct Instance<'a>(&'a Output);
 
 /// Display the [`Instance`] as a JSON string.
 impl std::fmt::Display for Instance<'_> {
@@ -33,17 +36,14 @@ impl std::fmt::Display for Instance<'_> {
 impl Instance<'_> {
     /// Clear a specific field of the underlying sample.
     pub fn clear(&mut self, field: &str) -> ConnectorFallible {
-        self.0
-            .parent
-            .native_mut()?
-            .clear_member(&self.0.name, field)
+        self.0.parent.native()?.clear_member(&self.0.name, field)
     }
 
     /// Set the entire instance from a JSON string.
     pub fn set_as_json(&mut self, json_value: &str) -> ConnectorFallible {
         self.0
             .parent
-            .native_mut()?
+            .native()?
             .set_json_instance(&self.0.name, json_value)
     }
 
@@ -51,7 +51,7 @@ impl Instance<'_> {
     pub fn set_value(&mut self, field: &str, value: SelectedValue) -> ConnectorFallible {
         self.0
             .parent
-            .native_mut()?
+            .native()?
             .set_into_samples(&self.0.name, field, value)
     }
 
@@ -59,7 +59,7 @@ impl Instance<'_> {
     pub fn set_number(&mut self, field: &str, value: f64) -> ConnectorFallible {
         self.0
             .parent
-            .native_mut()?
+            .native()?
             .set_number_into_samples(&self.0.name, field, value)
     }
 
@@ -67,7 +67,7 @@ impl Instance<'_> {
     pub fn set_boolean(&mut self, field: &str, value: bool) -> ConnectorFallible {
         self.0
             .parent
-            .native_mut()?
+            .native()?
             .set_boolean_into_samples(&self.0.name, field, value)
     }
 
@@ -75,7 +75,7 @@ impl Instance<'_> {
     pub fn set_string(&mut self, field: &str, value: &str) -> ConnectorFallible {
         self.0
             .parent
-            .native_mut()?
+            .native()?
             .set_string_into_samples(&self.0.name, field, value)
     }
 
@@ -116,7 +116,7 @@ impl Instance<'_> {
 
     /// Get the entire instance as a JSON string.
     pub(crate) fn get_as_json(&self) -> ConnectorResult<String> {
-        self.0.parent.native_ref()?.get_json_instance(&self.0.name)
+        self.0.parent.native()?.get_json_instance(&self.0.name)
     }
 }
 
@@ -132,16 +132,27 @@ impl Instance<'_> {
 /// ```rust
 #[doc = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/snippets/output/using_output.rs"))]
 /// ```
-#[derive(Debug)]
-pub struct Output<'a> {
+pub struct Output {
     /// The name of the output as known to the parent [`Connector`].
-    pub(crate) name: String,
+    name: String,
+
+    /// The native output handle.
+    native: crate::ffi::FfiOutput,
 
     /// A reference to the parent [`Connector`].
-    pub(crate) parent: &'a Connector,
+    parent: std::sync::Arc<crate::connector::ConnectorInner>,
 }
 
-impl<'a> Drop for Output<'a> {
+impl std::fmt::Debug for Output {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("Output")
+            .field("name", &self.name)
+            .field("parent", &self.parent)
+            .finish()
+    }
+}
+
+impl Drop for Output {
     fn drop(&mut self) {
         if let Err(e) = self.parent.release_output(&self.name) {
             eprintln!(
@@ -244,27 +255,33 @@ impl WriteParams {
     }
 }
 
-impl<'a> Output<'a> {
-    pub(crate) fn new(name: &str, connector: &'a Connector) -> Output<'a> {
-        Output {
+impl Output {
+    pub(crate) fn new(
+        name: &str,
+        connector: &std::sync::Arc<crate::connector::ConnectorInner>,
+    ) -> ConnectorResult<Output> {
+        let native = connector.native()?.get_output(name)?;
+
+        Ok(Output {
             name: name.to_string(),
-            parent: connector,
-        }
+            native,
+            parent: connector.clone(),
+        })
     }
 
     /// Get an [`Instance`] of the data held by this [`Output`].
-    pub fn instance(&'a self) -> Instance<'a> {
+    pub fn instance(&self) -> Instance<'_> {
         Instance(self)
     }
 
     /// Clear all fields of the underlying sample.
     pub fn clear_members(&mut self) -> ConnectorFallible {
-        self.parent.native_mut()?.clear(&self.name)
+        self.parent.native()?.clear(&self.name)
     }
 
     /// Write the output sample using the underlying `DataWriter`.
     pub fn write(&mut self) -> ConnectorFallible {
-        self.parent.native_mut()?.write(&self.name)
+        self.parent.native()?.write(&self.name)
     }
 
     /// Write the output sample with specific parameters.
@@ -276,7 +293,7 @@ impl<'a> Output<'a> {
             })?;
 
         self.parent
-            .native_mut()?
+            .native()?
             .write_with_params(&self.name, &params_json)
     }
 
@@ -295,10 +312,7 @@ impl<'a> Output<'a> {
 
     /// Implementation of wait functionality.
     fn impl_wait(&self, timeout_ms: Option<i32>) -> ConnectorFallible {
-        self.parent
-            .native_ref()?
-            .get_output(&self.name)?
-            .wait_for_acknowledgments(timeout_ms)
+        self.native.wait_for_acknowledgments(timeout_ms)
     }
 
     /// Wait until a subscription is matched, indefinitely.
@@ -322,17 +336,11 @@ impl<'a> Output<'a> {
         &self,
         timeout_ms: Option<i32>,
     ) -> ConnectorResult<i32> {
-        self.parent
-            .native_ref()?
-            .get_output(&self.name)?
-            .wait_for_matched_subscription(timeout_ms)
+        self.native.wait_for_matched_subscription(timeout_ms)
     }
 
     /// Display the matched subscriptions as a JSON string.
     pub fn display_matched_subscriptions(&self) -> ConnectorResult<String> {
-        self.parent
-            .native_ref()?
-            .get_output(&self.name)?
-            .get_matched_subscriptions()
+        self.native.get_matched_subscriptions()
     }
 }

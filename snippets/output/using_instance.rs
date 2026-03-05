@@ -1,6 +1,6 @@
 use rtiddsconnector::{self, Output};
 
-fn using_instance(output: &Output<'_>) -> rtiddsconnector::ConnectorFallible {
+fn using_instance(output: &Output) -> rtiddsconnector::ConnectorFallible {
     let mut instance = output.instance();
 
     instance.set_number("x", 10.0)?;

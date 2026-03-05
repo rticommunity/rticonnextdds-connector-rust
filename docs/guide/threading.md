@@ -22,4 +22,6 @@ channels with the rest of your application.
 While the connector uses internal locks for native access, this is not a
 guarantee of safe concurrent access to the same `Input` or `Output`. Treat the
 API as single-threaded unless you control synchronization at the application
-level.
+level. If you truly need to share an `Input` or `Output` across threads,
+you can wrap these on top of `Arc<Mutex<T>>` to manage concurrency on the
+application.

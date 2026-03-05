@@ -28,6 +28,27 @@ mod input;
 mod output;
 mod result;
 
+#[cfg(test)]
+mod tests {
+
+    #[test]
+    fn concurrency_traits() {
+        use crate::{Connector, Input, Instance, Output, Sample};
+        use static_assertions::{assert_impl_all, assert_not_impl_any};
+
+        assert_impl_all!(Connector: Send, Sync);
+
+        assert_impl_all!(Input: Send);
+        assert_impl_all!(Output: Send);
+
+        assert_not_impl_any!(Input: Sync);
+        assert_not_impl_any!(Output: Sync);
+
+        assert_not_impl_any!(Sample<'_>: Send, Sync);
+        assert_not_impl_any!(Instance<'_>: Send, Sync);
+    }
+}
+
 #[cfg(doc)]
 pub mod guide {
     #![doc = include_str!(concat!(

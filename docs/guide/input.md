@@ -10,7 +10,7 @@ To read or take samples, first get a reference to the input:
 ```rust
 use rtiddsconnector::{Connector, Input};
 
-fn get_input(connector: &Connector) -> rtiddsconnector::ConnectorResult<Input<'_>> {
+fn get_input(connector: &Connector) -> rtiddsconnector::ConnectorResult<Input> {
     connector.get_input("MySubscriber::MyReader")
 }
 ```

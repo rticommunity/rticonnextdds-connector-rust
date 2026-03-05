@@ -43,6 +43,7 @@ zip = "5.1"
 [dev-dependencies]
 # std::assert_matches is still unstable
 assert_matches = "1.5"
+static_assertions = "1.1"
 clap = { version = "4.5", features = ["derive"] }
 regex = "1.11"
 serde = { version = "*", features = ["derive"] }

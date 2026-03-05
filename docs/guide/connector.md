@@ -41,8 +41,8 @@ loads a `<domain_participant>` from a `<domain_participant_library>`. For exampl
 
 See a complete example in `examples/MyApplication.xml`.
 
-> **Note:** Operations on the same `Connector` or its contained entities are not
-> protected for multi-threaded access. See
+> **Note:** Operations on the same `Connector` or its contained entities on
+> different threads incur some caveats. See
 > [Threading and ownership](crate::guide::threading) for guidance.
 
 ## Closing a connector

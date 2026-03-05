@@ -10,7 +10,7 @@ To write a data sample, first look up an output:
 ```rust
 use rtiddsconnector::{Connector, Output};
 
-fn get_output(connector: &Connector) -> rtiddsconnector::ConnectorResult<Output<'_>> {
+fn get_output(connector: &Connector) -> rtiddsconnector::ConnectorResult<Output> {
     connector.get_output("MyPublisher::MyWriter")
 }
 ```

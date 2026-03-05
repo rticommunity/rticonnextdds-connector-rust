@@ -35,8 +35,8 @@ fn main() -> rtiddsconnector::ConnectorFallible {
     let _globals = GlobalsDropGuard;
 
     let connector = Connector::new("MyLibrary::MyParticipant", "/path/to/App.xml")?;
-    let mut output: Output<'_> = connector.get_output("MyPublisher::MyWriter")?;
-    let mut input: Input<'_> = connector.get_input("MySubscriber::MyReader")?;
+    let mut output: Output = connector.get_output("MyPublisher::MyWriter")?;
+    let mut input: Input = connector.get_input("MySubscriber::MyReader")?;
 
     let mut instance = output.instance();
     instance.set_number("x", 100.0)?;

@@ -135,7 +135,7 @@ pub struct TestContext {
 }
 
 impl TestContext {
-    pub fn test_entities(&mut self) -> ConnectorResult<TestEntities<'_>> {
+    pub fn test_entities(&mut self) -> ConnectorResult<TestEntities> {
         let input = match &self.test_input_name {
             Some(name) => Some(self.connector.get_input(name)?),
             None => None,
@@ -156,12 +156,12 @@ impl TestContext {
 }
 
 #[derive(Debug)]
-pub struct TestEntities<'a> {
-    pub input: Option<Input<'a>>,
-    pub output: Option<Output<'a>>,
+pub struct TestEntities {
+    pub input: Option<Input>,
+    pub output: Option<Output>,
 }
 
-impl TestEntities<'_> {
+impl TestEntities {
     pub fn ensure_discovery(self) -> Self {
         self.ensure_discovery_of_amount_with_timeout(1, TEST_TIMEOUT)
     }

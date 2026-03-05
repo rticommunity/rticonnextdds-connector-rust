@@ -36,7 +36,7 @@ fn start_using_connector() -> rtiddsconnector::ConnectorFallible {
     let connector = Connector::new(XML_PARTICIPANT, XML_PATH)?;
 
     // Fetch the Output associated with the Connector instance
-    let mut output: Output<'_> = connector.get_output(XML_OUTPUT)?;
+    let mut output: Output = connector.get_output(XML_OUTPUT)?;
 
     // Modifies the data contained by the Output instance
     let mut instance = output.instance();
@@ -49,7 +49,7 @@ fn start_using_connector() -> rtiddsconnector::ConnectorFallible {
     output.write()?;
 
     // Fetch the Input associated with the Connector instance
-    let mut input: Input<'_> = connector.get_input(XML_INPUT)?;
+    let mut input: Input = connector.get_input(XML_INPUT)?;
 
     // Wait for the data to be available before actually retrieving the samples
     input.wait_with_timeout(std::time::Duration::from_secs(5))?;
