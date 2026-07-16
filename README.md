@@ -105,3 +105,9 @@ provided "as is", with no warranty of any type, including any warranty for
 fitness for any purpose. RTI is under no obligation to maintain or support the
 Software. RTI shall not be liable for any incidental or consequential damages
 arising out of the use or inability to use the software.
+
+## AI Use Disclosure
+
+Our engineering team uses AI-assisted tools to accelerate code generation and
+debugging. However, human developers retain full ownership; every line of code
+is reviewed and approved by human developers.
